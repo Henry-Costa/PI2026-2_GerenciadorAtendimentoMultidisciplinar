@@ -12,17 +12,79 @@ O projeto não utiliza bibliotecas ou recursos externos.
 
 ## Etapa atual
 
-A tela de login está estruturada e adaptada para diferentes tamanhos de tela, com campos de e-mail e senha. A única interação implementada em JavaScript é mostrar ou ocultar a senha. O login ainda não autentica usuários nem está conectado a um servidor.
+Estrutura inicial concluída. A próxima etapa é desenvolver a tela de login.
 
 ## Estrutura
 
-- `index.html`: estrutura da tela de login
-- `style.css`: estilos e adaptação para dispositivos móveis
-- `script.js`: interação para mostrar ou ocultar a senha
+- `index.html`: estrutura principal da página
+- `style.css`: estilos do projeto
+- `script.js`: interações do projeto
 
-## Próximas etapas
+## Cronograma do frontend
 
-- Dashboard
-- Cadastro e consulta de alunos
-- Atendimentos e agenda
-- Equipe, relatórios e documentos
+### Estrutura Inicial do Projeto
+
+**Duração:** 1 dia
+
+- Organização de pastas
+- Configuração dos arquivos HTML, CSS e JavaScript
+
+**Status:** concluída
+
+### Tela de Login
+
+**Duração:** 2 dias
+
+- Desenvolvimento da interface
+- Validações e interações
+- Responsividade
+
+**Status:** próxima etapa
+
+### Navegação e Sidebar
+
+**Duração:** 1 dia
+
+- Menu lateral
+- Estrutura de navegação entre páginas
+
+### Dashboard Administrativo
+
+**Duração:** 3 dias
+
+- Cards de indicadores
+- Listagem de atendimentos
+- Gráficos e métricas
+- Layout do painel principal
+
+### Perfil do Aluno
+
+**Duração:** 2 dias
+
+- Exibição de dados cadastrais
+- Histórico de atendimentos
+- Organização das informações
+
+### Cadastro de Alunos
+
+**Duração:** 2 dias
+
+- Formulários
+- Máscaras de campos
+- Upload de imagem
+- Validações
+
+### Responsividade e Ajustes Visuais
+
+**Duração:** 1 dia
+
+- Adequação para diferentes resoluções
+- Padronização da interface
+
+### Testes e Refinamentos
+
+**Duração:** 1 dia
+
+- Correção de bugs
+- Revisão da experiência do usuário
+- Ajustes finais
