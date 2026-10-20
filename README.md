@@ -12,7 +12,7 @@ O projeto não utiliza bibliotecas ou recursos externos.
 
 ## Etapa atual
 
-Estrutura inicial concluída. A próxima etapa é desenvolver a tela de login.
+Tela de login concluída. A autenticação ainda não está conectada a um servidor.
 
 ## Estrutura
 
@@ -39,7 +39,7 @@ Estrutura inicial concluída. A próxima etapa é desenvolver a tela de login.
 - Validações e interações
 - Responsividade
 
-**Status:** próxima etapa
+**Status:** concluída
 
 ### Navegação e Sidebar
 
@@ -47,6 +47,8 @@ Estrutura inicial concluída. A próxima etapa é desenvolver a tela de login.
 
 - Menu lateral
 - Estrutura de navegação entre páginas
+
+**Status:** próxima etapa
 
 ### Dashboard Administrativo
 

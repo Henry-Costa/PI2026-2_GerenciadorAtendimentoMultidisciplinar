@@ -4,11 +4,72 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<meta name="theme-color" content="#f2f7f8">
-	<title>Gerenciador de Atendimento Multidisciplinar</title>
+	<title>Entrar | Espaço Bianca Petenão</title>
 	<link rel="stylesheet" href="style.css">
 </head>
 <body>
-	<main id="app"></main>
+	<main class="login-page">
+		<section class="welcome-panel" aria-labelledby="brand-name">
+			<div class="brand" aria-label="Espaço Bianca Petenão">
+				<span class="brand-copy">
+					<span class="brand-kicker">ESPAÇO</span>
+					<span class="brand-name" id="brand-name">Bianca Petenão</span>
+				</span>
+			</div>
+
+			<div class="welcome-copy" id="inicio">
+				<p class="eyebrow">Cuidado multidisciplinar</p>
+				<h1>Cuidado que transforma.<br>Desenvolvimento que inspira.</h1>
+				<p class="welcome-description">
+					Gestão de atendimentos e acompanhamento para mais conexão,
+					organização e resultados.
+				</p>
+			</div>
+		</section>
+
+		<section class="form-panel" aria-labelledby="login-title">
+			<div class="login-box">
+				<div class="form-heading">
+					<p class="eyebrow">Área de acesso</p>
+					<h2 id="login-title">Bem-vindo de volta!</h2>
+					<p>Acesse sua conta para continuar.</p>
+				</div>
+
+				<form id="login-form">
+					<label for="email">E-mail</label>
+					<input
+						id="email"
+						name="email"
+						type="email"
+						placeholder="seu@email.com.br"
+						autocomplete="username"
+						required
+					>
+
+					<div class="password-label-row">
+						<label for="password">Senha</label>
+						<button class="text-button" id="toggle-password" type="button" aria-pressed="false">
+							Mostrar
+						</button>
+					</div>
+					<input
+						id="password"
+						name="password"
+						type="password"
+						placeholder="Digite sua senha"
+						autocomplete="current-password"
+						required
+					>
+
+					<button class="submit-button" type="submit">Entrar</button>
+					<p class="form-message" id="form-message" role="status" aria-live="polite"></p>
+				</form>
+
+				<p class="account-note">Ainda não tem sua conta?<br><strong>Fale com o administrador</strong></p>
+			</div>
+			<p class="form-footer">Espaço Bianca Petenão <span aria-hidden="true">·</span> Acesso seguro</p>
+		</section>
+	</main>
 	<script src="script.js"></script>
 </body>
 </html>
