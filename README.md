@@ -8,17 +8,19 @@ Frontend em desenvolvimento para o sistema de gerenciamento de atendimentos mult
 - CSS
 - JavaScript
 
-O projeto não utiliza bibliotecas ou recursos externos.
+O projeto usa HTML, CSS e JavaScript sem frameworks. Os ícones Bootstrap Icons são carregados por CDN (Content Delivery Network) e precisam de conexão com a internet.
 
 ## Etapa atual
 
-Tela de login concluída. A autenticação ainda não está conectada a um servidor.
+O botão **Acessar**, no canto superior direito, abre o painel para demonstração. O botão **Entrar** exige e-mail e senha preenchidos; o e-mail mostra avisos em português para campo vazio ou formato inválido. A autenticação ainda não está conectada. No desktop, o menu recolhido vira uma rail de ícones; no celular, inicia fechado com um ícone de casa e abre a navegação em coluna.
 
 ## Estrutura
 
 - `index.html`: estrutura principal da página
+- `painel.html`: painel com sidebar e navegação entre áreas
 - `style.css`: estilos do projeto
 - `script.js`: interações do projeto
+- `navegacao.js`: dados dos links e símbolos do menu, além da navegação entre as seções
 
 ## Cronograma do frontend
 
@@ -48,7 +50,7 @@ Tela de login concluída. A autenticação ainda não está conectada a um servi
 - Menu lateral
 - Estrutura de navegação entre páginas
 
-**Status:** próxima etapa
+**Status:** concluída
 
 ### Dashboard Administrativo
 
@@ -58,6 +60,8 @@ Tela de login concluída. A autenticação ainda não está conectada a um servi
 - Listagem de atendimentos
 - Gráficos e métricas
 - Layout do painel principal
+
+**Status:** próxima etapa
 
 ### Perfil do Aluno
 
