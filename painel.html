@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="theme-color" content="#dceef1">
+	<title>Painel | Espaço Bianca Petenão</title>
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+	<link rel="stylesheet" href="style.css">
+</head>
+<body class="app-body">
+	<div class="app-shell">
+		<aside class="app-sidebar" id="app-sidebar" aria-label="Navegação principal">
+			<a class="sidebar-brand" href="#dashboard">
+				<span class="sidebar-brand-kicker">ESPAÇO</span>
+				<strong>Bianca Petenão</strong>
+				<span class="sidebar-brand-compact" aria-hidden="true">BP</span>
+			</a>
+			<button class="sidebar-toggle" id="sidebar-toggle" type="button" aria-controls="app-sidebar" aria-expanded="true" aria-label="Recolher menu" title="Recolher menu">
+				<i class="sidebar-toggle-icon sidebar-toggle-desktop bi bi-chevron-left" aria-hidden="true"></i>
+				<i class="sidebar-toggle-icon sidebar-toggle-mobile bi bi-house" aria-hidden="true"></i>
+			</button>
+
+			<nav class="sidebar-navigation" aria-label="Seções do sistema">
+				<p class="navigation-label">Menu</p>
+				<ul class="navigation-list" id="navigation-list"></ul>
+			</nav>
+
+			<a class="logout-link" href="index.html" title="Voltar ao login"><i class="navigation-icon bi bi-box-arrow-left" aria-hidden="true"></i><span class="navigation-link-label">Voltar ao login</span></a>
+		</aside>
+
+		<main class="app-main">
+			<header class="app-header">
+				<div class="app-heading">
+					<p class="eyebrow">Espaço Bianca Petenão</p>
+					<h1 id="page-title">Dashboard</h1>
+				</div>
+			</header>
+			<section class="page-placeholder" aria-live="polite" aria-atomic="true">
+				<h2 id="section-title">Visão geral</h2>
+				<p id="section-description">O dashboard será desenvolvido na próxima etapa.</p>
+			</section>
+		</main>
+	</div>
+	<script src="navegacao.js" defer></script>
+</body>
+</html>
