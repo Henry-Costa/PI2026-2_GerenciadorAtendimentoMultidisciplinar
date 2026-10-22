@@ -628,6 +628,68 @@ input {
     font-size: 13px;
 }
 
+.agenda-filters {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: end;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.agenda-filters label {
+    display: grid;
+    flex: 1 1 160px;
+    min-width: 0;
+    gap: 6px;
+    color: var(--ink-soft);
+    font-size: 12px;
+}
+
+.agenda-filters .agenda-search {
+    flex-basis: 100%;
+}
+
+.agenda-filters input,
+.agenda-filters select {
+    width: 100%;
+    min-width: 0;
+    height: 40px;
+    padding: 0 10px;
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    background: #f8fcfc;
+    color: var(--ink);
+    font: inherit;
+}
+
+.agenda-reset {
+    display: grid;
+    width: 40px;
+    height: 40px;
+    flex: 0 0 40px;
+    place-items: center;
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    background: #f8fcfc;
+    color: var(--teal-deep);
+    cursor: pointer;
+}
+
+.agenda-reset:hover {
+    background: #dceef1;
+}
+
+.agenda-filters :focus-visible {
+    outline: 2px solid var(--teal);
+    outline-offset: 2px;
+}
+
+.agenda-results {
+    margin: 0 0 12px;
+    color: var(--ink-soft);
+    font-size: 13px;
+}
+
 .agenda-table-scroll {
     max-width: 100%;
     overflow-x: auto;

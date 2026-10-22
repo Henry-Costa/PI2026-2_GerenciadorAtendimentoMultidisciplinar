@@ -19,12 +19,27 @@ const demoAppointments = [
     return { ...appointment, date };
 });
 
-function getUpcomingAppointments(appointments, today) {
+function getUpcomingAppointments(appointments, today, days = 7) {
     const periodEnd = new Date(today);
-    periodEnd.setDate(periodEnd.getDate() + 7);
+    periodEnd.setDate(periodEnd.getDate() + days);
     return appointments
         .filter((appointment) => appointment.date >= today && appointment.date < periodEnd)
         .sort((first, second) => first.date - second.date || first.time.localeCompare(second.time));
+}
+
+function normalizeSearch(value) {
+    return value.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLocaleLowerCase("pt-BR").trim();
+}
+
+function filterAppointments(appointments, filters) {
+    const search = normalizeSearch(filters.search);
+    return appointments.filter((appointment) => {
+        const text = normalizeSearch(`${appointment.student} ${appointment.professional} ${appointment.area}`);
+        return text.includes(search)
+            && (!filters.professional || appointment.professional === filters.professional)
+            && (!filters.area || appointment.area === filters.area)
+            && (!filters.status || appointment.status === filters.status);
+    });
 }
 
 const quickLinksData = [
@@ -115,6 +130,24 @@ const sectionTitle = document.querySelector("#section-title");
 const sectionDescription = document.querySelector("#section-description");
 const dashboardView = document.querySelector("#dashboard-view");
 const pagePlaceholder = document.querySelector("#page-placeholder");
+const agendaFilters = document.querySelector("#agenda-filters");
+const appointmentSearch = document.querySelector("#appointment-search");
+const filterPeriod = document.querySelector("#filter-period");
+const filterProfessional = document.querySelector("#filter-professional");
+const filterArea = document.querySelector("#filter-area");
+const filterStatus = document.querySelector("#filter-status");
+
+function populateFilter(select, values) {
+    [...new Set(values)].sort((first, second) => first.localeCompare(second, "pt-BR")).forEach((value) => {
+        const option = document.createElement("option");
+        option.value = value;
+        option.textContent = value;
+        select.append(option);
+    });
+}
+
+populateFilter(filterProfessional, demoAppointments.map((appointment) => appointment.professional));
+populateFilter(filterArea, demoAppointments.map((appointment) => appointment.area));
 
 document.querySelector("#profile-name").textContent = currentProfile.name;
 document.querySelector("#profile-role").textContent = currentProfile.role;
@@ -137,13 +170,22 @@ function renderDashboard() {
     });
 
     const dateFormatter = new Intl.DateTimeFormat("pt-BR", { day: "2-digit", month: "2-digit", year: "numeric" });
+    const days = Number(filterPeriod.value);
+    const appointmentsInPeriod = getUpcomingAppointments(demoAppointments, dashboardToday, days);
+    const visibleAppointments = filterAppointments(appointmentsInPeriod, {
+        search: appointmentSearch.value,
+        professional: filterProfessional.value,
+        area: filterArea.value,
+        status: filterStatus.value
+    });
     const lastDay = new Date(dashboardToday);
-    lastDay.setDate(lastDay.getDate() + 6);
+    lastDay.setDate(lastDay.getDate() + days - 1);
     document.querySelector("#agenda-period").textContent = `${dateFormatter.format(dashboardToday)} a ${dateFormatter.format(lastDay)} (inclui hoje)`;
+    document.querySelector("#agenda-results").textContent = `${visibleAppointments.length} de ${appointmentsInPeriod.length} atendimentos no período`;
     const list = document.querySelector("#appointments-list");
     list.replaceChildren();
 
-    appointments.forEach((appointment) => {
+    visibleAppointments.forEach((appointment) => {
         const row = document.createElement("tr");
         const values = [dateFormatter.format(appointment.date), appointment.time, appointment.student, appointment.professional, appointment.area];
         values.forEach((value) => {
@@ -159,11 +201,24 @@ function renderDashboard() {
         row.append(statusCell);
         list.append(row);
     });
-    document.querySelector(".agenda-table-scroll").hidden = appointments.length === 0;
-    document.querySelector("#appointments-empty").hidden = appointments.length > 0;
+    document.querySelector(".agenda-table-scroll").hidden = visibleAppointments.length === 0;
+    document.querySelector("#appointments-empty").hidden = visibleAppointments.length > 0;
 }
 
 renderDashboard();
+agendaFilters.addEventListener("submit", (event) => event.preventDefault());
+appointmentSearch.addEventListener("input", renderDashboard);
+[filterPeriod, filterProfessional, filterArea, filterStatus].forEach((select) => {
+    select.addEventListener("change", renderDashboard);
+});
+agendaFilters.addEventListener("reset", () => {
+    appointmentSearch.value = "";
+    filterPeriod.value = "7";
+    filterProfessional.value = "";
+    filterArea.value = "";
+    filterStatus.value = "";
+    renderDashboard();
+});
 const navigationLinks = document.querySelectorAll(".navigation-link");
 const appShell = document.querySelector(".app-shell");
 const sidebarToggle = document.querySelector("#sidebar-toggle");
