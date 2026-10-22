@@ -35,8 +35,24 @@
 					<p class="eyebrow">Espaço Bianca Petenão</p>
 					<h1 id="page-title">Dashboard</h1>
 				</div>
+				<div class="profile-summary" aria-label="Perfil atual">
+					<i class="bi bi-person-circle" aria-hidden="true"></i>
+					<div><strong id="profile-name"></strong><span id="profile-role"></span></div>
+				</div>
 			</header>
-			<section class="page-placeholder" aria-live="polite" aria-atomic="true">
+			<section id="dashboard-view" class="dashboard-view" aria-label="Resumo do dashboard">
+				<p id="dashboard-date" class="dashboard-date"></p>
+				<h2 id="dashboard-greeting"></h2>
+				<p>Veja o resumo dos atendimentos do espaço.</p>
+				<dl class="dashboard-metrics">
+					<div><dt>Próximos 7 dias</dt><dd id="metric-upcoming"></dd></div>
+					<div><dt>Aguardando confirmação</dt><dd id="metric-pending"></dd></div>
+					<div><dt>Confirmados nos próximos 7 dias</dt><dd id="metric-confirmed"></dd></div>
+					<div><dt>Atendimentos hoje</dt><dd id="metric-today"></dd></div>
+				</dl>
+				<a class="report-link" href="#relatorios">Relatórios completos</a>
+			</section>
+			<section id="page-placeholder" class="page-placeholder" aria-live="polite" aria-atomic="true">
 				<h2 id="section-title">Visão geral</h2>
 				<p id="section-description">O dashboard será desenvolvido na próxima etapa.</p>
 			</section>

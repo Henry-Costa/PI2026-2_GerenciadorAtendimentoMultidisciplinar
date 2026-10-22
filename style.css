@@ -522,6 +522,101 @@ input {
     line-height: 1.6;
 }
 
+.app-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.profile-summary {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 13px;
+}
+
+.profile-summary > i {
+    color: var(--teal-deep);
+    font-size: 32px;
+}
+
+.profile-summary div {
+    display: grid;
+    gap: 4px;
+}
+
+.profile-summary span,
+.dashboard-date,
+.dashboard-view > p,
+.dashboard-metrics dt {
+    color: var(--ink-soft);
+}
+
+.dashboard-view {
+    padding-top: 24px;
+}
+
+.dashboard-view[hidden] {
+    display: none;
+}
+
+.dashboard-date {
+    font-size: 13px;
+}
+
+.dashboard-view h2 {
+    color: var(--teal-deep);
+    font-size: 26px;
+    overflow-wrap: anywhere;
+}
+
+.dashboard-metrics {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 14px;
+    margin: 28px 0;
+}
+
+.dashboard-metrics div {
+    min-width: 0;
+    padding: 18px;
+    border-radius: 4px;
+    background: #f8fcfc;
+}
+
+.dashboard-metrics dt {
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+.dashboard-metrics dd {
+    margin: 12px 0 0;
+    color: var(--teal-deep);
+    font-size: 30px;
+    font-weight: 700;
+}
+
+#metric-pending {
+    color: #875219;
+}
+
+#metric-confirmed {
+    color: #286148;
+}
+
+.report-link {
+    color: var(--teal-deep);
+    font-size: 14px;
+}
+
+@media (max-width: 1000px) {
+    .dashboard-metrics {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
 @media (max-width: 850px) {
     .login-page {
         grid-template-columns: minmax(0, 0.9fr) minmax(370px, 1.1fr);

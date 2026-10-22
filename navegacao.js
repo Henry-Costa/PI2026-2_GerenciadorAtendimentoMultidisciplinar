@@ -1,3 +1,10 @@
+const currentProfile = {
+    name: "Bianca Petenão",
+    role: "Administradora"
+};
+
+const demoSummary = { upcoming: 6, pending: 3, confirmed: 3, today: 2 };
+
 const quickLinksData = [
     { label: "Dashboard", href: "#dashboard", icon: "bi-house" },
     { label: "Alunos", href: "#alunos", icon: "bi-mortarboard" },
@@ -84,6 +91,20 @@ quickLinksData.forEach(({ label, href, icon }) => {
 const pageTitle = document.querySelector("#page-title");
 const sectionTitle = document.querySelector("#section-title");
 const sectionDescription = document.querySelector("#section-description");
+const dashboardView = document.querySelector("#dashboard-view");
+const pagePlaceholder = document.querySelector("#page-placeholder");
+
+document.querySelector("#profile-name").textContent = currentProfile.name;
+document.querySelector("#profile-role").textContent = currentProfile.role;
+document.querySelector(".profile-summary").setAttribute("aria-label", `Perfil atual: ${currentProfile.name}, ${currentProfile.role}`);
+document.querySelector("#dashboard-greeting").textContent = `Olá, ${currentProfile.name}!`;
+document.querySelector("#dashboard-date").textContent = new Intl.DateTimeFormat("pt-BR", {
+    weekday: "long", day: "2-digit", month: "long", year: "numeric"
+}).format(new Date());
+
+Object.entries(demoSummary).forEach(([metric, value]) => {
+    document.querySelector(`#metric-${metric}`).textContent = value;
+});
 const navigationLinks = document.querySelectorAll(".navigation-link");
 const appShell = document.querySelector(".app-shell");
 const sidebarToggle = document.querySelector("#sidebar-toggle");
@@ -112,6 +133,8 @@ function renderPage() {
     const pageKey = pages[requestedPage] ? requestedPage : "dashboard";
     const page = pages[pageKey];
 
+    dashboardView.hidden = pageKey !== "dashboard";
+    pagePlaceholder.hidden = pageKey === "dashboard";
     pageTitle.textContent = page.title;
     sectionTitle.textContent = page.heading;
     sectionDescription.textContent = page.description;
