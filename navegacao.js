@@ -3,7 +3,29 @@ const currentProfile = {
     role: "Administradora"
 };
 
-const demoSummary = { upcoming: 6, pending: 3, confirmed: 3, today: 2 };
+const dashboardToday = new Date();
+dashboardToday.setHours(0, 0, 0, 0);
+
+const demoAppointments = [
+    { dayOffset: 0, time: "10:30", student: "Theo Ferreira", professional: "Camila Rocha", area: "Fonoaudiologia", status: "pending" },
+    { dayOffset: 0, time: "09:00", student: "Alice Martins", professional: "Marina Costa", area: "Psicologia", status: "confirmed" },
+    { dayOffset: 1, time: "14:00", student: "Lara Mendes", professional: "Marina Costa", area: "Psicologia", status: "confirmed" },
+    { dayOffset: 2, time: "09:30", student: "Miguel Costa", professional: "Paula Nunes", area: "Terapia Ocupacional", status: "pending" },
+    { dayOffset: 4, time: "15:00", student: "Sofia Ribeiro", professional: "Camila Rocha", area: "Fonoaudiologia", status: "confirmed" },
+    { dayOffset: 6, time: "11:00", student: "Bento Oliveira", professional: "Paula Nunes", area: "Terapia Ocupacional", status: "pending" }
+].map((appointment) => {
+    const date = new Date(dashboardToday);
+    date.setDate(date.getDate() + appointment.dayOffset);
+    return { ...appointment, date };
+});
+
+function getUpcomingAppointments(appointments, today) {
+    const periodEnd = new Date(today);
+    periodEnd.setDate(periodEnd.getDate() + 7);
+    return appointments
+        .filter((appointment) => appointment.date >= today && appointment.date < periodEnd)
+        .sort((first, second) => first.date - second.date || first.time.localeCompare(second.time));
+}
 
 const quickLinksData = [
     { label: "Dashboard", href: "#dashboard", icon: "bi-house" },
@@ -100,11 +122,48 @@ document.querySelector(".profile-summary").setAttribute("aria-label", `Perfil at
 document.querySelector("#dashboard-greeting").textContent = `Olá, ${currentProfile.name}!`;
 document.querySelector("#dashboard-date").textContent = new Intl.DateTimeFormat("pt-BR", {
     weekday: "long", day: "2-digit", month: "long", year: "numeric"
-}).format(new Date());
+}).format(dashboardToday);
 
-Object.entries(demoSummary).forEach(([metric, value]) => {
-    document.querySelector(`#metric-${metric}`).textContent = value;
-});
+function renderDashboard() {
+    const appointments = getUpcomingAppointments(demoAppointments, dashboardToday);
+    const summary = {
+        upcoming: appointments.length,
+        pending: appointments.filter((appointment) => appointment.status === "pending").length,
+        confirmed: appointments.filter((appointment) => appointment.status === "confirmed").length,
+        today: appointments.filter((appointment) => appointment.date.getTime() === dashboardToday.getTime()).length
+    };
+    Object.entries(summary).forEach(([metric, value]) => {
+        document.querySelector(`#metric-${metric}`).textContent = value;
+    });
+
+    const dateFormatter = new Intl.DateTimeFormat("pt-BR", { day: "2-digit", month: "2-digit", year: "numeric" });
+    const lastDay = new Date(dashboardToday);
+    lastDay.setDate(lastDay.getDate() + 6);
+    document.querySelector("#agenda-period").textContent = `${dateFormatter.format(dashboardToday)} a ${dateFormatter.format(lastDay)} (inclui hoje)`;
+    const list = document.querySelector("#appointments-list");
+    list.replaceChildren();
+
+    appointments.forEach((appointment) => {
+        const row = document.createElement("tr");
+        const values = [dateFormatter.format(appointment.date), appointment.time, appointment.student, appointment.professional, appointment.area];
+        values.forEach((value) => {
+            const cell = document.createElement("td");
+            cell.textContent = value;
+            row.append(cell);
+        });
+        const statusCell = document.createElement("td");
+        const status = document.createElement("span");
+        status.className = `agenda-status agenda-status-${appointment.status}`;
+        status.textContent = appointment.status === "pending" ? "Aguardando confirmação" : "Confirmado";
+        statusCell.append(status);
+        row.append(statusCell);
+        list.append(row);
+    });
+    document.querySelector(".agenda-table-scroll").hidden = appointments.length === 0;
+    document.querySelector("#appointments-empty").hidden = appointments.length > 0;
+}
+
+renderDashboard();
 const navigationLinks = document.querySelectorAll(".navigation-link");
 const appShell = document.querySelector(".app-shell");
 const sidebarToggle = document.querySelector("#sidebar-toggle");

@@ -12,7 +12,7 @@ O projeto usa HTML, CSS e JavaScript sem frameworks. Os ícones Bootstrap Icons 
 
 ## Etapa atual
 
-Dashboard em desenvolvimento por incrementos. A primeira etapa contém perfil, saudação conforme `currentProfile`, data local e quatro KPIs com valores fixos de demonstração em `demoSummary`. Não há autenticação ou banco conectado. O atalho de relatórios aparece somente no Dashboard; a página de relatórios ainda não foi implementada.
+Dashboard em desenvolvimento por incrementos. A versão atual contém perfil, saudação conforme `currentProfile`, data local e agenda dos próximos sete dias (hoje e os seis dias seguintes), ordenada por data e horário. Os quatro KPIs são calculados a partir dos registros fictícios em `demoAppointments`, sem valores fixos separados. Não há autenticação ou banco conectado. O atalho de relatórios aparece somente no Dashboard; a página de relatórios ainda não foi implementada.
 
 O botão **Acessar**, no canto superior direito, abre o painel para demonstração. O botão **Entrar** exige e-mail e senha preenchidos; o e-mail mostra avisos em português para campo vazio ou formato inválido. A autenticação ainda não está conectada. No desktop, o menu recolhido vira uma rail de ícones; no celular, inicia fechado com um ícone de casa e abre a navegação em coluna.
 
@@ -66,7 +66,7 @@ O botão **Acessar**, no canto superior direito, abre o painel para demonstraç�
 **Status:** em andamento
 
 - Incremento 1: perfil, boas-vindas, data e KPIs de demonstração.
-- Incremento 2: agenda com dados fictícios e contagens calculadas.
+- Incremento 2: agenda com dados fictícios e contagens calculadas (implementado).
 - Incremento 3: busca e filtros da agenda.
 - Incremento 4: consulta do aluno e mensagem de confirmação pelo WhatsApp.
 

@@ -51,6 +51,27 @@
 					<div><dt>Atendimentos hoje</dt><dd id="metric-today"></dd></div>
 				</dl>
 				<a class="report-link" href="#relatorios">Relatórios completos</a>
+				<section class="dashboard-agenda" aria-labelledby="appointments-title">
+					<h3 id="appointments-title">Atendimentos dos próximos 7 dias</h3>
+					<p class="agenda-period" id="agenda-period"></p>
+					<div class="agenda-table-scroll" role="region" aria-label="Agenda de atendimentos" tabindex="0">
+						<table class="agenda-table">
+							<caption>Atendimentos fictícios para demonstração</caption>
+							<thead>
+								<tr>
+									<th scope="col">Data</th>
+									<th scope="col">Horário</th>
+									<th scope="col">Aluno</th>
+									<th scope="col">Profissional</th>
+									<th scope="col">Área</th>
+									<th scope="col">Status</th>
+								</tr>
+							</thead>
+							<tbody id="appointments-list"></tbody>
+						</table>
+					</div>
+					<p id="appointments-empty" hidden>Nenhum atendimento agendado neste período.</p>
+				</section>
 			</section>
 			<section id="page-placeholder" class="page-placeholder" aria-live="polite" aria-atomic="true">
 				<h2 id="section-title">Visão geral</h2>
