@@ -1,3 +1,47 @@
+const currentProfile = {
+    name: "Bianca Petenão",
+    role: "Administradora"
+};
+
+const dashboardToday = new Date();
+dashboardToday.setHours(0, 0, 0, 0);
+
+const demoAppointments = [
+    { dayOffset: 0, time: "10:30", student: "Theo Ferreira", professional: "Camila Rocha", area: "Fonoaudiologia", status: "pending" },
+    { dayOffset: 0, time: "09:00", student: "Alice Martins", professional: "Marina Costa", area: "Psicologia", status: "confirmed" },
+    { dayOffset: 1, time: "14:00", student: "Lara Mendes", professional: "Marina Costa", area: "Psicologia", status: "confirmed" },
+    { dayOffset: 2, time: "09:30", student: "Miguel Costa", professional: "Paula Nunes", area: "Terapia Ocupacional", status: "pending" },
+    { dayOffset: 4, time: "15:00", student: "Sofia Ribeiro", professional: "Camila Rocha", area: "Fonoaudiologia", status: "confirmed" },
+    { dayOffset: 6, time: "11:00", student: "Bento Oliveira", professional: "Paula Nunes", area: "Terapia Ocupacional", status: "pending" }
+].map((appointment) => {
+    const date = new Date(dashboardToday);
+    date.setDate(date.getDate() + appointment.dayOffset);
+    return { ...appointment, date };
+});
+
+function getUpcomingAppointments(appointments, today, days = 7) {
+    const periodEnd = new Date(today);
+    periodEnd.setDate(periodEnd.getDate() + days);
+    return appointments
+        .filter((appointment) => appointment.date >= today && appointment.date < periodEnd)
+        .sort((first, second) => first.date - second.date || first.time.localeCompare(second.time));
+}
+
+function normalizeSearch(value) {
+    return value.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLocaleLowerCase("pt-BR").trim();
+}
+
+function filterAppointments(appointments, filters) {
+    const search = normalizeSearch(filters.search);
+    return appointments.filter((appointment) => {
+        const text = normalizeSearch(`${appointment.student} ${appointment.professional} ${appointment.area}`);
+        return text.includes(search)
+            && (!filters.professional || appointment.professional === filters.professional)
+            && (!filters.area || appointment.area === filters.area)
+            && (!filters.status || appointment.status === filters.status);
+    });
+}
+
 const quickLinksData = [
     { label: "Dashboard", href: "#dashboard", icon: "bi-house" },
     { label: "Alunos", href: "#alunos", icon: "bi-mortarboard" },
@@ -84,6 +128,97 @@ quickLinksData.forEach(({ label, href, icon }) => {
 const pageTitle = document.querySelector("#page-title");
 const sectionTitle = document.querySelector("#section-title");
 const sectionDescription = document.querySelector("#section-description");
+const dashboardView = document.querySelector("#dashboard-view");
+const pagePlaceholder = document.querySelector("#page-placeholder");
+const agendaFilters = document.querySelector("#agenda-filters");
+const appointmentSearch = document.querySelector("#appointment-search");
+const filterPeriod = document.querySelector("#filter-period");
+const filterProfessional = document.querySelector("#filter-professional");
+const filterArea = document.querySelector("#filter-area");
+const filterStatus = document.querySelector("#filter-status");
+
+function populateFilter(select, values) {
+    [...new Set(values)].sort((first, second) => first.localeCompare(second, "pt-BR")).forEach((value) => {
+        const option = document.createElement("option");
+        option.value = value;
+        option.textContent = value;
+        select.append(option);
+    });
+}
+
+populateFilter(filterProfessional, demoAppointments.map((appointment) => appointment.professional));
+populateFilter(filterArea, demoAppointments.map((appointment) => appointment.area));
+
+document.querySelector("#profile-name").textContent = currentProfile.name;
+document.querySelector("#profile-role").textContent = currentProfile.role;
+document.querySelector(".profile-summary").setAttribute("aria-label", `Perfil atual: ${currentProfile.name}, ${currentProfile.role}`);
+document.querySelector("#dashboard-greeting").textContent = `Olá, ${currentProfile.name}!`;
+document.querySelector("#dashboard-date").textContent = new Intl.DateTimeFormat("pt-BR", {
+    weekday: "long", day: "2-digit", month: "long", year: "numeric"
+}).format(dashboardToday);
+
+function renderDashboard() {
+    const appointments = getUpcomingAppointments(demoAppointments, dashboardToday);
+    const summary = {
+        upcoming: appointments.length,
+        pending: appointments.filter((appointment) => appointment.status === "pending").length,
+        confirmed: appointments.filter((appointment) => appointment.status === "confirmed").length,
+        today: appointments.filter((appointment) => appointment.date.getTime() === dashboardToday.getTime()).length
+    };
+    Object.entries(summary).forEach(([metric, value]) => {
+        document.querySelector(`#metric-${metric}`).textContent = value;
+    });
+
+    const dateFormatter = new Intl.DateTimeFormat("pt-BR", { day: "2-digit", month: "2-digit", year: "numeric" });
+    const days = Number(filterPeriod.value);
+    const appointmentsInPeriod = getUpcomingAppointments(demoAppointments, dashboardToday, days);
+    const visibleAppointments = filterAppointments(appointmentsInPeriod, {
+        search: appointmentSearch.value,
+        professional: filterProfessional.value,
+        area: filterArea.value,
+        status: filterStatus.value
+    });
+    const lastDay = new Date(dashboardToday);
+    lastDay.setDate(lastDay.getDate() + days - 1);
+    document.querySelector("#agenda-period").textContent = `${dateFormatter.format(dashboardToday)} a ${dateFormatter.format(lastDay)} (inclui hoje)`;
+    document.querySelector("#agenda-results").textContent = `${visibleAppointments.length} de ${appointmentsInPeriod.length} atendimentos no período`;
+    const list = document.querySelector("#appointments-list");
+    list.replaceChildren();
+
+    visibleAppointments.forEach((appointment) => {
+        const row = document.createElement("tr");
+        const values = [dateFormatter.format(appointment.date), appointment.time, appointment.student, appointment.professional, appointment.area];
+        values.forEach((value) => {
+            const cell = document.createElement("td");
+            cell.textContent = value;
+            row.append(cell);
+        });
+        const statusCell = document.createElement("td");
+        const status = document.createElement("span");
+        status.className = `agenda-status agenda-status-${appointment.status}`;
+        status.textContent = appointment.status === "pending" ? "Aguardando confirmação" : "Confirmado";
+        statusCell.append(status);
+        row.append(statusCell);
+        list.append(row);
+    });
+    document.querySelector(".agenda-table-scroll").hidden = visibleAppointments.length === 0;
+    document.querySelector("#appointments-empty").hidden = visibleAppointments.length > 0;
+}
+
+renderDashboard();
+agendaFilters.addEventListener("submit", (event) => event.preventDefault());
+appointmentSearch.addEventListener("input", renderDashboard);
+[filterPeriod, filterProfessional, filterArea, filterStatus].forEach((select) => {
+    select.addEventListener("change", renderDashboard);
+});
+agendaFilters.addEventListener("reset", () => {
+    appointmentSearch.value = "";
+    filterPeriod.value = "7";
+    filterProfessional.value = "";
+    filterArea.value = "";
+    filterStatus.value = "";
+    renderDashboard();
+});
 const navigationLinks = document.querySelectorAll(".navigation-link");
 const appShell = document.querySelector(".app-shell");
 const sidebarToggle = document.querySelector("#sidebar-toggle");
@@ -112,6 +247,8 @@ function renderPage() {
     const pageKey = pages[requestedPage] ? requestedPage : "dashboard";
     const page = pages[pageKey];
 
+    dashboardView.hidden = pageKey !== "dashboard";
+    pagePlaceholder.hidden = pageKey === "dashboard";
     pageTitle.textContent = page.title;
     sectionTitle.textContent = page.heading;
     sectionDescription.textContent = page.description;

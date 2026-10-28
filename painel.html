@@ -37,6 +37,71 @@
 				</div>
 			</header>
 			<section class="page-placeholder" aria-live="polite" aria-atomic="true">
+				<div class="profile-summary" aria-label="Perfil atual">
+					<i class="bi bi-person-circle" aria-hidden="true"></i>
+					<div><strong id="profile-name"></strong><span id="profile-role"></span></div>
+				</div>
+			</header>
+			<section id="dashboard-view" class="dashboard-view" aria-label="Resumo do dashboard">
+				<p id="dashboard-date" class="dashboard-date"></p>
+				<h2 id="dashboard-greeting"></h2>
+				<p>Veja o resumo dos atendimentos do espaço.</p>
+				<dl class="dashboard-metrics">
+					<div><dt>Próximos 7 dias</dt><dd id="metric-upcoming"></dd></div>
+					<div><dt>Aguardando confirmação</dt><dd id="metric-pending"></dd></div>
+					<div><dt>Confirmados nos próximos 7 dias</dt><dd id="metric-confirmed"></dd></div>
+					<div><dt>Atendimentos hoje</dt><dd id="metric-today"></dd></div>
+				</dl>
+				<a class="report-link" href="#relatorios">Relatórios completos</a>
+				<section class="dashboard-agenda" aria-labelledby="appointments-title">
+					<h3 id="appointments-title">Agenda de atendimentos</h3>
+					<p class="agenda-period" id="agenda-period"></p>
+					<form id="agenda-filters" class="agenda-filters" aria-label="Busca e filtros da agenda">
+						<label class="agenda-search">Buscar aluno, profissional ou área
+							<input id="appointment-search" type="search" placeholder="Nome ou área de atendimento" autocomplete="off">
+						</label>
+						<label>Período
+							<select id="filter-period">
+								<option value="7">Próximos 7 dias</option>
+								<option value="1">Hoje</option>
+							</select>
+						</label>
+						<label>Profissional
+							<select id="filter-professional"><option value="">Todos</option></select>
+						</label>
+						<label>Área
+							<select id="filter-area"><option value="">Todas</option></select>
+						</label>
+						<label>Status
+							<select id="filter-status">
+								<option value="">Todos</option>
+								<option value="pending">Aguardando confirmação</option>
+								<option value="confirmed">Confirmado</option>
+							</select>
+						</label>
+						<button class="agenda-reset" type="reset" title="Limpar busca e filtros" aria-label="Limpar busca e filtros"><i class="bi bi-arrow-counterclockwise" aria-hidden="true"></i></button>
+					</form>
+					<p class="agenda-results" id="agenda-results" role="status" aria-live="polite"></p>
+					<div class="agenda-table-scroll" role="region" aria-label="Agenda de atendimentos" tabindex="0">
+						<table class="agenda-table">
+							<caption>Atendimentos fictícios para demonstração</caption>
+							<thead>
+								<tr>
+									<th scope="col">Data</th>
+									<th scope="col">Horário</th>
+									<th scope="col">Aluno</th>
+									<th scope="col">Profissional</th>
+									<th scope="col">Área</th>
+									<th scope="col">Status</th>
+								</tr>
+							</thead>
+							<tbody id="appointments-list"></tbody>
+						</table>
+					</div>
+					<p id="appointments-empty" hidden>Nenhum atendimento corresponde à busca e aos filtros.</p>
+				</section>
+			</section>
+			<section id="page-placeholder" class="page-placeholder" aria-live="polite" aria-atomic="true">
 				<h2 id="section-title">Visão geral</h2>
 				<p id="section-description">O dashboard será desenvolvido na próxima etapa.</p>
 			</section>
