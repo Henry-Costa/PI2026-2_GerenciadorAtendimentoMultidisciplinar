@@ -233,6 +233,7 @@ const teamNoticeForm = document.querySelector("#team-notice-form");
 const teamNoticeRecipient = document.querySelector("#team-notice-recipient");
 const teamNoticeStudent = document.querySelector("#team-notice-student");
 const teamNoticeComment = document.querySelector("#team-notice-comment");
+const teamNoticeSearch = document.querySelector("#team-notice-search");
 const teamNoticeList = document.querySelector("#team-notice-list");
 const appointmentSearch = document.querySelector("#appointment-search");
 const filterPeriod = document.querySelector("#filter-period");
@@ -703,12 +704,18 @@ function renderTeamProfile(professional) {
 }
 
 function renderTeamNotices() {
+    const search = normalizeSearch(teamNoticeSearch.value);
+    const visibleNotices = teamNotices.filter((notice) => normalizeSearch(
+        `${notice.author} ${notice.recipient} ${notice.student} ${notice.guardian} ${notice.comment}`
+    ).includes(search));
     teamNoticeList.replaceChildren();
-    teamNotices.forEach((notice) => {
+    visibleNotices.forEach((notice) => {
         const article = document.createElement("article");
         const header = document.createElement("header");
         const author = document.createElement("strong");
         const metadata = document.createElement("span");
+        const deleteButton = document.createElement("button");
+        const deleteIcon = document.createElement("i");
         const context = document.createElement("p");
         const comment = document.createElement("p");
         article.className = "team-notice-item";
@@ -719,11 +726,26 @@ function renderTeamNotices() {
         context.textContent = `Sobre ${notice.student} · responsável ${notice.guardian}`;
         comment.className = "team-notice-item-comment";
         comment.textContent = notice.comment;
-        header.append(author, metadata);
+        deleteButton.className = "team-notice-delete";
+        deleteButton.type = "button";
+        deleteButton.title = "Apagar aviso";
+        deleteButton.setAttribute("aria-label", `Apagar aviso sobre ${notice.student} para ${notice.recipient}`);
+        deleteIcon.className = "bi bi-x-lg";
+        deleteIcon.setAttribute("aria-hidden", "true");
+        deleteButton.append(deleteIcon);
+        deleteButton.addEventListener("click", () => {
+            const noticeIndex = teamNotices.indexOf(notice);
+            if (noticeIndex !== -1) teamNotices.splice(noticeIndex, 1);
+            document.querySelector("#team-notice-feedback").textContent = "Aviso apagado desta sessão.";
+            renderTeamNotices();
+        });
+        header.append(author, metadata, deleteButton);
         article.append(header, context, comment);
         teamNoticeList.append(article);
     });
     document.querySelector("#team-notice-empty").hidden = teamNotices.length > 0;
+    document.querySelector("#team-notice-no-results").hidden = teamNotices.length === 0 || visibleNotices.length > 0;
+    document.querySelector("#team-notice-results").textContent = search ? `${visibleNotices.length} de ${teamNotices.length} avisos` : `${teamNotices.length} avisos`;
 }
 
 teamNoticeForm.addEventListener("submit", (event) => {
@@ -755,6 +777,8 @@ teamNoticeComment.addEventListener("input", () => {
     teamNoticeComment.setCustomValidity("");
     document.querySelector("#team-notice-feedback").textContent = "";
 });
+
+teamNoticeSearch.addEventListener("input", renderTeamNotices);
 
 function renderCommunications() {
     const days = Number(communicationPeriod.value);

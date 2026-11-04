@@ -1249,6 +1249,33 @@ input {
     resize: vertical;
 }
 
+.team-notice-search {
+    display: grid;
+    max-width: 760px;
+    gap: 6px;
+    margin-top: 20px;
+    color: var(--ink-soft);
+    font-size: 12px;
+}
+
+.team-notice-search input {
+    width: 100%;
+    min-width: 0;
+    height: 40px;
+    padding: 0 10px;
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    background: #f8fcfc;
+    color: var(--ink);
+    font: inherit;
+}
+
+.team-notice-search-results {
+    margin: 8px 0 0;
+    color: var(--ink-soft);
+    font-size: 12px;
+}
+
 .team-notice-privacy-note,
 .team-notice-feedback,
 .team-notice-empty {
@@ -1276,7 +1303,7 @@ input {
 
 .team-notice-item-header {
     display: flex;
-    align-items: baseline;
+    align-items: center;
     justify-content: space-between;
     flex-wrap: wrap;
     gap: 6px 16px;
@@ -1291,6 +1318,30 @@ input {
 .team-notice-item-context {
     color: var(--ink-soft);
     font-size: 12px;
+}
+
+.team-notice-delete {
+    display: grid;
+    width: 34px;
+    height: 34px;
+    flex: 0 0 34px;
+    place-items: center;
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    background: #fff;
+    color: var(--ink-soft);
+    cursor: pointer;
+}
+
+.team-notice-delete:hover {
+    border-color: #9c3d3d;
+    color: #9c3d3d;
+}
+
+.team-notice-delete:focus-visible,
+.team-notice-search :focus-visible {
+    outline: 2px solid var(--teal);
+    outline-offset: 2px;
 }
 
 .team-notice-item-context {

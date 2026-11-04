@@ -239,8 +239,13 @@
 							<button class="new-student-button" type="submit"><i class="bi bi-send" aria-hidden="true"></i> Publicar aviso</button>
 						</form>
 						<p id="team-notice-feedback" class="team-notice-feedback" role="status" aria-live="polite"></p>
+						<label class="team-notice-search">Buscar aviso
+							<input id="team-notice-search" type="search" placeholder="Aluno, responsável, profissional ou comentário" autocomplete="off">
+						</label>
+						<p id="team-notice-results" class="team-notice-search-results" role="status" aria-live="polite"></p>
 						<div id="team-notice-list" class="team-notice-list" aria-label="Avisos publicados"></div>
 						<p id="team-notice-empty" class="team-notice-empty">Nenhum aviso publicado nesta sessão.</p>
+						<p id="team-notice-no-results" class="team-notice-empty" hidden>Nenhum aviso corresponde à busca.</p>
 					</section>
 					<dl class="dashboard-metrics communication-metrics">
 						<div><dt>Atendimentos no período</dt><dd id="communication-total"></dd></div>
