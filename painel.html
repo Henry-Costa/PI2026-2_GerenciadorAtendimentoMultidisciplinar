@@ -208,6 +208,42 @@
 						<p id="team-profile-empty" hidden>Nenhum atendimento programado para este período.</p>
 					</section>
 				</section>
+				<section id="communications-view" class="communications-view" hidden aria-labelledby="communications-title">
+					<header class="communications-header">
+						<div><h2 id="communications-title">Painel de lembretes</h2><p>Prepare mensagens para os responsáveis e envie manualmente pelo WhatsApp.</p></div>
+						<div class="communication-controls">
+							<label>Mensagem
+								<select id="communication-template"><option value="confirmation">Confirmação de atendimento</option><option value="reminder">Lembrete de atendimento</option></select>
+							</label>
+							<label>Período
+								<select id="communication-period"><option value="7">Próximos 7 dias</option><option value="1">Hoje</option></select>
+							</label>
+						</div>
+					</header>
+					<p class="communication-demo-note">Contatos fictícios para demonstração. Nenhuma mensagem é enviada ou registrada automaticamente.</p>
+					<dl class="dashboard-metrics communication-metrics">
+						<div><dt>Atendimentos no período</dt><dd id="communication-total"></dd></div>
+						<div><dt>Aguardando confirmação</dt><dd id="communication-pending"></dd></div>
+					</dl>
+					<form id="communication-filters" class="agenda-filters" aria-label="Filtrar lembretes">
+						<label class="agenda-search">Buscar aluno ou responsável
+							<input id="communication-search" type="search" placeholder="Nome do aluno ou responsável" autocomplete="off">
+						</label>
+						<label>Status
+							<select id="communication-status"><option value="">Todos</option><option value="pending">Aguardando confirmação</option><option value="confirmed">Confirmado</option></select>
+						</label>
+						<button class="agenda-reset" type="reset" title="Limpar filtros" aria-label="Limpar filtros"><i class="bi bi-arrow-counterclockwise" aria-hidden="true"></i></button>
+					</form>
+					<p id="communication-results" class="agenda-results" role="status" aria-live="polite"></p>
+					<div id="communication-table-scroll" class="agenda-table-scroll" role="region" aria-label="Lembretes de atendimentos" tabindex="0">
+						<table class="agenda-table communication-table">
+							<caption>Atendimentos e mensagens preparadas com contatos fictícios</caption>
+							<thead><tr><th scope="col">Data e horário</th><th scope="col">Aluno e responsável</th><th scope="col">Profissional</th><th scope="col">Status</th><th scope="col">Mensagem</th></tr></thead>
+							<tbody id="communication-list"></tbody>
+						</table>
+					</div>
+					<p id="communication-empty" hidden>Nenhum atendimento corresponde à busca e aos filtros.</p>
+				</section>
 				<section id="students-view" class="students-view" hidden aria-labelledby="students-title">
 					<div id="student-list-view">
 						<div class="students-heading">

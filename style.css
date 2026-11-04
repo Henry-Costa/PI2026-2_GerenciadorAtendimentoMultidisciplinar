@@ -1127,6 +1127,113 @@ input {
     font-size: 18px;
 }
 
+.communications-view {
+    max-width: 1100px;
+    padding-top: 24px;
+}
+
+.communications-view[hidden] {
+    display: none;
+}
+
+.communications-header,
+.communication-controls {
+    display: flex;
+    align-items: end;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 16px;
+}
+
+.communications-header h2 {
+    margin: 0 0 8px;
+    color: var(--teal-deep);
+    font-size: 22px;
+}
+
+.communications-header p,
+.communication-demo-note {
+    margin: 0;
+    color: var(--ink-soft);
+    font-size: 13px;
+}
+
+.communication-controls {
+    justify-content: flex-end;
+}
+
+.communication-controls label {
+    display: grid;
+    gap: 6px;
+    color: var(--ink-soft);
+    font-size: 12px;
+}
+
+.communication-controls select {
+    min-width: 190px;
+    height: 40px;
+    padding: 0 10px;
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    background: #f8fcfc;
+    color: var(--ink);
+    font: inherit;
+}
+
+.communication-controls select:focus-visible,
+.communication-filters :focus-visible {
+    outline: 2px solid var(--teal);
+    outline-offset: 2px;
+}
+
+.communication-demo-note {
+    margin-top: 18px;
+}
+
+.communication-metrics {
+    max-width: 620px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    margin: 20px 0 24px;
+}
+
+.communication-table {
+    min-width: 900px;
+}
+
+.communication-table td:nth-child(2) strong,
+.communication-table td:nth-child(2) span {
+    display: block;
+}
+
+.communication-table td:nth-child(2) span {
+    margin-top: 5px;
+    color: var(--ink-soft);
+    font-size: 12px;
+}
+
+.communication-whatsapp-link {
+    display: inline-flex;
+    min-height: 36px;
+    align-items: center;
+    padding: 7px 11px;
+    border: 1px solid var(--teal-deep);
+    border-radius: 4px;
+    color: var(--teal-deep);
+    font-size: 12px;
+    font-weight: 600;
+    text-decoration: none;
+    white-space: nowrap;
+}
+
+.communication-whatsapp-link:hover {
+    background: #dceef1;
+}
+
+.communication-whatsapp-link:focus-visible {
+    outline: 2px solid var(--teal);
+    outline-offset: 2px;
+}
+
 .agenda-view {
     max-width: 1100px;
     padding-top: 24px;
@@ -1432,6 +1539,26 @@ input {
     .report-controls {
         width: 100%;
         justify-content: flex-start;
+    }
+
+    .communications-header {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .communication-controls {
+        width: 100%;
+        justify-content: flex-start;
+    }
+
+    .communication-controls label {
+        flex: 1 1 150px;
+        min-width: 0;
+    }
+
+    .communication-controls select {
+        min-width: 0;
+        width: 100%;
     }
 
     .app-shell.sidebar-collapsed {

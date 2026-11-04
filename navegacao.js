@@ -182,6 +182,7 @@ const dashboardView = document.querySelector("#dashboard-view");
 const agendaView = document.querySelector("#agenda-view");
 const appointmentsView = document.querySelector("#appointments-view");
 const teamView = document.querySelector("#team-view");
+const communicationsView = document.querySelector("#communications-view");
 const studentsView = document.querySelector("#students-view");
 const reportsView = document.querySelector("#reports-view");
 const studentsList = document.querySelector("#students-list");
@@ -222,6 +223,12 @@ const teamSearch = document.querySelector("#team-search");
 const teamAreaFilter = document.querySelector("#team-area-filter");
 const teamList = document.querySelector("#team-list");
 const teamProfileAppointments = document.querySelector("#team-profile-appointments");
+const communicationFilters = document.querySelector("#communication-filters");
+const communicationTemplate = document.querySelector("#communication-template");
+const communicationPeriod = document.querySelector("#communication-period");
+const communicationSearch = document.querySelector("#communication-search");
+const communicationStatus = document.querySelector("#communication-status");
+const communicationList = document.querySelector("#communication-list");
 const appointmentSearch = document.querySelector("#appointment-search");
 const filterPeriod = document.querySelector("#filter-period");
 const filterProfessional = document.querySelector("#filter-professional");
@@ -677,6 +684,70 @@ function renderTeamProfile(professional) {
     teamProfileView.hidden = false;
 }
 
+function renderCommunications() {
+    const days = Number(communicationPeriod.value);
+    const appointmentsInPeriod = getUpcomingAppointments(demoAppointments, dashboardToday, days);
+    const pendingCount = appointmentsInPeriod.filter((appointment) => appointment.status === "pending").length;
+    const search = normalizeSearch(communicationSearch.value);
+    const visibleAppointments = appointmentsInPeriod.filter((appointment) => {
+        const student = demoStudentProfiles.find((profile) => profile.name === appointment.student);
+        const recipient = student?.guardian || "";
+        return (!search || normalizeSearch(`${appointment.student} ${recipient}`).includes(search))
+            && (!communicationStatus.value || appointment.status === communicationStatus.value);
+    });
+
+    document.querySelector("#communication-total").textContent = appointmentsInPeriod.length;
+    document.querySelector("#communication-pending").textContent = pendingCount;
+    document.querySelector("#communication-results").textContent = `${visibleAppointments.length} de ${appointmentsInPeriod.length} atendimentos no período`;
+    communicationList.replaceChildren();
+
+    const dateFormatter = new Intl.DateTimeFormat("pt-BR", { day: "2-digit", month: "2-digit", year: "numeric" });
+    visibleAppointments.forEach((appointment) => {
+        const student = demoStudentProfiles.find((profile) => profile.name === appointment.student);
+        const row = document.createElement("tr");
+        const dateCell = document.createElement("td");
+        dateCell.textContent = `${dateFormatter.format(appointment.date)} às ${appointment.time}`;
+        const recipientCell = document.createElement("td");
+        const recipientName = document.createElement("strong");
+        const recipientLabel = document.createElement("span");
+        recipientName.textContent = appointment.student;
+        recipientLabel.textContent = student ? `Responsável: ${student.guardian}` : "Contato demonstrativo indisponível";
+        recipientCell.append(recipientName, recipientLabel);
+        const professionalCell = document.createElement("td");
+        professionalCell.textContent = `${appointment.professional} · ${appointment.area}`;
+        const statusCell = document.createElement("td");
+        const status = document.createElement("span");
+        status.className = `agenda-status agenda-status-${appointment.status}`;
+        status.textContent = appointment.status === "pending" ? "Aguardando confirmação" : "Confirmado";
+        statusCell.append(status);
+        const actionCell = document.createElement("td");
+        if (student) {
+            const phone = student.contact.replace(/\D/g, "");
+            const whatsappPhone = phone.length === 10 || phone.length === 11 ? `55${phone}` : phone;
+            const date = new Intl.DateTimeFormat("pt-BR", { dateStyle: "long" }).format(appointment.date);
+            const message = communicationTemplate.value === "confirmation"
+                ? `Olá, ${student.guardian}! Podemos confirmar o atendimento de ${appointment.student} no dia ${date}, às ${appointment.time}, com ${appointment.professional} (${appointment.area})?`
+                : `Olá, ${student.guardian}! Lembramos do atendimento de ${appointment.student} no dia ${date}, às ${appointment.time}, com ${appointment.professional} (${appointment.area}).`;
+            const whatsappUrl = new URL(`https://wa.me/${whatsappPhone}`);
+            whatsappUrl.searchParams.set("text", message);
+            const messageLink = document.createElement("a");
+            messageLink.className = "communication-whatsapp-link";
+            messageLink.href = whatsappUrl.toString();
+            messageLink.target = "_blank";
+            messageLink.rel = "noopener noreferrer";
+            messageLink.textContent = "Preparar WhatsApp";
+            messageLink.setAttribute("aria-label", `Preparar mensagem para ${student.guardian} sobre ${appointment.student}`);
+            actionCell.append(messageLink);
+        } else {
+            actionCell.textContent = "Sem contato";
+        }
+        row.append(dateCell, recipientCell, professionalCell, statusCell, actionCell);
+        communicationList.append(row);
+    });
+    document.querySelector("#communication-table-scroll").hidden = visibleAppointments.length === 0;
+    document.querySelector("#communication-empty").hidden = visibleAppointments.length > 0;
+}
+
 function renderReports() {
     const days = Number(reportPeriod.value);
     currentReportAppointments = getUpcomingAppointments(demoAppointments, dashboardToday, days);
@@ -780,7 +851,18 @@ renderDashboard();
 renderAppointmentsPage();
 renderAgendaDayStrip();
 renderAgendaView();
+renderCommunications();
 renderReports();
+communicationPeriod.addEventListener("change", renderCommunications);
+communicationTemplate.addEventListener("change", renderCommunications);
+communicationSearch.addEventListener("input", renderCommunications);
+communicationStatus.addEventListener("change", renderCommunications);
+communicationFilters.addEventListener("submit", (event) => event.preventDefault());
+communicationFilters.addEventListener("reset", () => {
+    communicationSearch.value = "";
+    communicationStatus.value = "";
+    renderCommunications();
+});
 reportPeriod.addEventListener("change", renderReports);
 exportReportButton.addEventListener("click", exportReport);
 appointmentsPageFilters.addEventListener("submit", (event) => event.preventDefault());
@@ -853,9 +935,10 @@ function renderPage() {
     agendaView.hidden = pageKey !== "agenda";
     appointmentsView.hidden = pageKey !== "atendimentos";
     teamView.hidden = pageKey !== "equipe";
+    communicationsView.hidden = pageKey !== "comunicacoes";
     studentsView.hidden = pageKey !== "alunos";
     reportsView.hidden = pageKey !== "relatorios";
-    pagePlaceholder.hidden = pageKey === "dashboard" || pageKey === "agenda" || pageKey === "atendimentos" || pageKey === "equipe" || pageKey === "alunos" || pageKey === "relatorios";
+    pagePlaceholder.hidden = pageKey === "dashboard" || pageKey === "agenda" || pageKey === "atendimentos" || pageKey === "equipe" || pageKey === "comunicacoes" || pageKey === "alunos" || pageKey === "relatorios";
     pageTitle.textContent = page.title;
     sectionTitle.textContent = page.heading;
     sectionDescription.textContent = page.description;
