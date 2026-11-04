@@ -70,7 +70,7 @@ O botão **Acessar**, no canto superior direito, abre o painel para demonstraç�
 - Incremento 1: perfil, boas-vindas, data e KPIs de demonstração.
 - Incremento 2: agenda com dados fictícios e contagens calculadas (implementado).
 - Incremento 3: busca e filtros da agenda (implementado).
-- Incremento 4: consulta do aluno e mensagem de confirmação pelo WhatsApp.
+- Incremento 4: consulta dos dados do atendimento em diálogo e preparação de mensagem de confirmação pelo WhatsApp (implementado). O telefone é informado no momento, não é salvo e a mensagem só é aberta no WhatsApp após ação explícita; o envio não é automático.
 
 Cada incremento será validado e commitado localmente antes do próximo. O envio ao GitHub fica para depois da revisão final.
 

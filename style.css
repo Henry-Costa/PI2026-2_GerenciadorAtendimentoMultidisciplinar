@@ -702,7 +702,7 @@ input {
 
 .agenda-table {
     width: 100%;
-    min-width: 760px;
+    min-width: 850px;
     border-collapse: collapse;
     text-align: left;
     font-size: 13px;
@@ -742,6 +742,121 @@ input {
 .agenda-status-confirmed {
     background: #e5f4ec;
     color: #286148;
+}
+
+.student-consult-button,
+.whatsapp-form button {
+    min-height: 36px;
+    padding: 7px 12px;
+    border: 1px solid var(--teal-deep);
+    border-radius: 4px;
+    background: #fff;
+    color: var(--teal-deep);
+    font: inherit;
+    cursor: pointer;
+}
+
+.student-consult-button:hover,
+.whatsapp-form button:hover {
+    background: #dceef1;
+}
+
+.student-dialog {
+    width: min(520px, calc(100% - 32px));
+    max-height: min(720px, calc(100% - 32px));
+    padding: 24px;
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    color: var(--ink);
+}
+
+.student-dialog::backdrop {
+    background: rgb(20 39 42 / 45%);
+}
+
+.student-dialog-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+}
+
+.student-dialog-heading h2 {
+    margin: 0;
+    color: var(--teal-deep);
+    font-size: 21px;
+}
+
+.student-dialog-heading form {
+    margin: 0;
+}
+
+.student-dialog-close {
+    display: grid;
+    width: 36px;
+    height: 36px;
+    place-items: center;
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    background: #fff;
+    color: var(--ink);
+    cursor: pointer;
+}
+
+.student-details {
+    display: grid;
+    gap: 14px;
+    margin: 24px 0;
+}
+
+.student-details div {
+    display: grid;
+    gap: 4px;
+}
+
+.student-details dt,
+.whatsapp-form label {
+    color: var(--ink-soft);
+    font-size: 12px;
+}
+
+.student-details dd {
+    margin: 0;
+    overflow-wrap: anywhere;
+}
+
+.whatsapp-form {
+    display: grid;
+    gap: 10px;
+}
+
+.whatsapp-form[hidden],
+.whatsapp-link[hidden] {
+    display: none;
+}
+
+.whatsapp-form input {
+    width: 100%;
+    min-width: 0;
+    height: 40px;
+    padding: 0 10px;
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    background: #f8fcfc;
+    color: var(--ink);
+    font: inherit;
+}
+
+.whatsapp-form :focus-visible,
+.student-dialog-close:focus-visible,
+.student-consult-button:focus-visible {
+    outline: 2px solid var(--teal);
+    outline-offset: 2px;
+}
+
+.whatsapp-link {
+    color: #286148;
+    font-weight: 600;
 }
 
 @media (max-width: 1000px) {

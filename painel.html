@@ -91,6 +91,7 @@
 									<th scope="col">Profissional</th>
 									<th scope="col">Área</th>
 									<th scope="col">Status</th>
+									<th scope="col">Ações</th>
 								</tr>
 							</thead>
 							<tbody id="appointments-list"></tbody>
@@ -99,6 +100,25 @@
 					<p id="appointments-empty" hidden>Nenhum atendimento corresponde à busca e aos filtros.</p>
 				</section>
 			</section>
+			<dialog id="student-dialog" class="student-dialog" aria-labelledby="student-dialog-title">
+				<div class="student-dialog-heading">
+					<h2 id="student-dialog-title">Consulta do aluno</h2>
+					<form method="dialog"><button class="student-dialog-close" type="submit" aria-label="Fechar consulta" title="Fechar consulta"><i class="bi bi-x-lg" aria-hidden="true"></i></button></form>
+				</div>
+				<dl class="student-details">
+					<div><dt>Aluno</dt><dd id="student-detail-name"></dd></div>
+					<div><dt>Data e horário</dt><dd id="student-detail-datetime"></dd></div>
+					<div><dt>Profissional</dt><dd id="student-detail-professional"></dd></div>
+					<div><dt>Área</dt><dd id="student-detail-area"></dd></div>
+					<div><dt>Status</dt><dd id="student-detail-status"></dd></div>
+				</dl>
+				<form id="whatsapp-form" class="whatsapp-form">
+					<label for="student-whatsapp">WhatsApp do responsável</label>
+					<input id="student-whatsapp" type="tel" inputmode="tel" autocomplete="tel" placeholder="Código do país, DDD e número" required>
+					<button type="submit">Preparar confirmação</button>
+					<a id="whatsapp-link" class="whatsapp-link" target="_blank" rel="noopener noreferrer" hidden>Abrir WhatsApp com mensagem</a>
+				</form>
+			</dialog>
 			<section id="page-placeholder" class="page-placeholder" aria-live="polite" aria-atomic="true">
 				<h2 id="section-title">Visão geral</h2>
 				<p id="section-description">O dashboard será desenvolvido na próxima etapa.</p>

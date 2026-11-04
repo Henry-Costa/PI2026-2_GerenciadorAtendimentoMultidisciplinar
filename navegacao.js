@@ -136,6 +136,11 @@ const filterPeriod = document.querySelector("#filter-period");
 const filterProfessional = document.querySelector("#filter-professional");
 const filterArea = document.querySelector("#filter-area");
 const filterStatus = document.querySelector("#filter-status");
+const studentDialog = document.querySelector("#student-dialog");
+const whatsappForm = document.querySelector("#whatsapp-form");
+const whatsappPhone = document.querySelector("#student-whatsapp");
+const whatsappLink = document.querySelector("#whatsapp-link");
+let selectedAppointment;
 
 function populateFilter(select, values) {
     [...new Set(values)].sort((first, second) => first.localeCompare(second, "pt-BR")).forEach((value) => {
@@ -199,11 +204,54 @@ function renderDashboard() {
         status.textContent = appointment.status === "pending" ? "Aguardando confirmação" : "Confirmado";
         statusCell.append(status);
         row.append(statusCell);
+
+        const actionCell = document.createElement("td");
+        const consultButton = document.createElement("button");
+        consultButton.className = "student-consult-button";
+        consultButton.type = "button";
+        consultButton.textContent = "Consultar";
+        consultButton.setAttribute("aria-label", `Consultar atendimento de ${appointment.student}`);
+        consultButton.addEventListener("click", () => openStudentDetails(appointment));
+        actionCell.append(consultButton);
+        row.append(actionCell);
         list.append(row);
     });
     document.querySelector(".agenda-table-scroll").hidden = visibleAppointments.length === 0;
     document.querySelector("#appointments-empty").hidden = visibleAppointments.length > 0;
 }
+
+function openStudentDetails(appointment) {
+    selectedAppointment = appointment;
+    const dateFormatter = new Intl.DateTimeFormat("pt-BR", { dateStyle: "long" });
+    document.querySelector("#student-detail-name").textContent = appointment.student;
+    document.querySelector("#student-detail-datetime").textContent = `${dateFormatter.format(appointment.date)} às ${appointment.time}`;
+    document.querySelector("#student-detail-professional").textContent = appointment.professional;
+    document.querySelector("#student-detail-area").textContent = appointment.area;
+    document.querySelector("#student-detail-status").textContent = appointment.status === "pending" ? "Aguardando confirmação" : "Confirmado";
+    whatsappForm.hidden = appointment.status !== "pending";
+    whatsappPhone.value = "";
+    whatsappPhone.setCustomValidity("");
+    whatsappLink.hidden = true;
+    studentDialog.showModal();
+}
+
+whatsappPhone.addEventListener("input", () => whatsappPhone.setCustomValidity(""));
+whatsappForm.addEventListener("submit", (event) => {
+    event.preventDefault();
+    const phone = whatsappPhone.value.replace(/\D/g, "");
+    if (phone.length < 10 || phone.length > 15) {
+        whatsappPhone.setCustomValidity("Informe o código do país, o DDD e o número.");
+        whatsappPhone.reportValidity();
+        return;
+    }
+
+    const date = new Intl.DateTimeFormat("pt-BR", { dateStyle: "long" }).format(selectedAppointment.date);
+    const message = `Olá! Podemos confirmar o atendimento de ${selectedAppointment.student} no dia ${date}, às ${selectedAppointment.time}, com ${selectedAppointment.professional} (${selectedAppointment.area})?`;
+    const whatsappUrl = new URL(`https://wa.me/${phone}`);
+    whatsappUrl.searchParams.set("text", message);
+    whatsappLink.href = whatsappUrl.toString();
+    whatsappLink.hidden = false;
+});
 
 renderDashboard();
 agendaFilters.addEventListener("submit", (event) => event.preventDefault());
