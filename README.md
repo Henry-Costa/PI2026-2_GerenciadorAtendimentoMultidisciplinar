@@ -12,7 +12,7 @@ O projeto usa HTML, CSS e JavaScript sem frameworks. Os ícones Bootstrap Icons 
 
 ## Etapa atual
 
-Dashboard em desenvolvimento por incrementos. A versão atual contém perfil, saudação conforme `currentProfile`, data local e agenda dos próximos sete dias (hoje e os seis dias seguintes), ordenada por data e horário. Os quatro KPIs são calculados a partir dos registros fictícios em `demoAppointments`, sem valores fixos separados. Não há autenticação ou banco conectado. O atalho de relatórios aparece somente no Dashboard; a página de relatórios ainda não foi implementada.
+Dashboard concluído em modo demonstrativo. Contém perfil, saudação conforme `currentProfile`, data local, quatro KPIs calculados e gráfico de atendimentos por área nos próximos sete dias. A agenda exibe os próximos atendimentos, ordenados por data e horário. Não há autenticação ou banco conectado. O atalho de relatórios aparece somente no Dashboard; a página de relatórios ainda não foi implementada.
 
 A agenda permite buscar aluno, profissional ou área sem distinção de acentos, combinar filtros de profissional, área e status, escolher entre hoje e os próximos sete dias e limpar todos os controles. A contagem de resultados acompanha a tabela; os KPIs mantêm o resumo dos próximos sete dias, independentemente dos filtros.
 
@@ -65,7 +65,7 @@ O botão **Acessar**, no canto superior direito, abre o painel para demonstraç�
 - Gráficos e métricas
 - Layout do painel principal
 
-**Status:** em andamento
+**Status:** concluído em modo demonstrativo
 
 - Incremento 1: perfil, boas-vindas, data e KPIs de demonstração.
 - Incremento 2: agenda com dados fictícios e contagens calculadas (implementado).

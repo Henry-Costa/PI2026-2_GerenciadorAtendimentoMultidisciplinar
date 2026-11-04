@@ -346,6 +346,34 @@ function renderDashboard() {
         document.querySelector(`#metric-${metric}`).textContent = value;
     });
 
+    const appointmentsByArea = appointments.reduce((counts, appointment) => {
+        counts[appointment.area] = (counts[appointment.area] || 0) + 1;
+        return counts;
+    }, {});
+    const maximumAreaCount = Math.max(1, ...Object.values(appointmentsByArea));
+    const areaChart = document.querySelector("#area-chart");
+    areaChart.replaceChildren();
+    Object.entries(appointmentsByArea).sort(([first], [second]) => first.localeCompare(second, "pt-BR")).forEach(([area, count]) => {
+        const row = document.createElement("div");
+        const label = document.createElement("span");
+        const track = document.createElement("span");
+        const bar = document.createElement("span");
+        const value = document.createElement("strong");
+        row.className = "area-chart-row";
+        row.setAttribute("role", "listitem");
+        label.className = "area-chart-label";
+        label.textContent = area;
+        track.className = "area-chart-track";
+        bar.className = "area-chart-bar";
+        bar.style.width = `${(count / maximumAreaCount) * 100}%`;
+        value.className = "area-chart-value";
+        value.textContent = String(count);
+        value.setAttribute("aria-label", `${count} atendimentos`);
+        track.append(bar);
+        row.append(label, track, value);
+        areaChart.append(row);
+    });
+
     const dateFormatter = new Intl.DateTimeFormat("pt-BR", { day: "2-digit", month: "2-digit", year: "numeric" });
     const days = Number(filterPeriod.value);
     const appointmentsInPeriod = getUpcomingAppointments(demoAppointments, dashboardToday, days);
