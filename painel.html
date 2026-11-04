@@ -221,6 +221,27 @@
 						</div>
 					</header>
 					<p class="communication-demo-note">Contatos fictícios para demonstração. Nenhuma mensagem é enviada ou registrada automaticamente.</p>
+					<section class="team-notice-section" aria-labelledby="team-notice-title">
+						<header class="team-notice-header">
+							<div><h3 id="team-notice-title">Avisos da Bianca</h3><p>Compartilhe um comentário de acompanhamento com a equipe.</p></div>
+						</header>
+						<form id="team-notice-form" class="team-notice-form">
+							<label>Enviar para
+								<select id="team-notice-recipient" required><option value="all">Toda a equipe</option></select>
+							</label>
+							<label>Aluno ou responsável
+								<select id="team-notice-student" required><option value="">Selecione</option></select>
+							</label>
+							<label class="team-notice-comment-label">Comentário
+								<textarea id="team-notice-comment" rows="3" maxlength="500" placeholder="Escreva um aviso breve para a equipe" required></textarea>
+							</label>
+							<p class="team-notice-privacy-note">Demonstração local: não inclua informações clínicas ou sigilosas. O aviso não é enviado para outras contas e desaparece ao recarregar.</p>
+							<button class="new-student-button" type="submit"><i class="bi bi-send" aria-hidden="true"></i> Publicar aviso</button>
+						</form>
+						<p id="team-notice-feedback" class="team-notice-feedback" role="status" aria-live="polite"></p>
+						<div id="team-notice-list" class="team-notice-list" aria-label="Avisos publicados"></div>
+						<p id="team-notice-empty" class="team-notice-empty">Nenhum aviso publicado nesta sessão.</p>
+					</section>
 					<dl class="dashboard-metrics communication-metrics">
 						<div><dt>Atendimentos no período</dt><dd id="communication-total"></dd></div>
 						<div><dt>Aguardando confirmação</dt><dd id="communication-pending"></dd></div>

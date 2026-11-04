@@ -229,6 +229,11 @@ const communicationPeriod = document.querySelector("#communication-period");
 const communicationSearch = document.querySelector("#communication-search");
 const communicationStatus = document.querySelector("#communication-status");
 const communicationList = document.querySelector("#communication-list");
+const teamNoticeForm = document.querySelector("#team-notice-form");
+const teamNoticeRecipient = document.querySelector("#team-notice-recipient");
+const teamNoticeStudent = document.querySelector("#team-notice-student");
+const teamNoticeComment = document.querySelector("#team-notice-comment");
+const teamNoticeList = document.querySelector("#team-notice-list");
 const appointmentSearch = document.querySelector("#appointment-search");
 const filterPeriod = document.querySelector("#filter-period");
 const filterProfessional = document.querySelector("#filter-professional");
@@ -242,6 +247,7 @@ let selectedAppointment;
 let selectedStudentPhotoUrl = "";
 let currentReportAppointments = [];
 let selectedAgendaDate = new Date(dashboardToday);
+const teamNotices = [];
 
 function populateFilter(select, values) {
     [...new Set(values)].sort((first, second) => first.localeCompare(second, "pt-BR")).forEach((value) => {
@@ -315,6 +321,18 @@ populateFilter(appointmentsPageArea, demoAppointments.map((appointment) => appoi
 populateFilter(agendaPageProfessional, demoAppointments.map((appointment) => appointment.professional));
 populateFilter(agendaPageArea, demoAppointments.map((appointment) => appointment.area));
 populateFilter(teamAreaFilter, demoProfessionals.map((professional) => professional.area));
+demoProfessionals.forEach((professional) => {
+    const option = document.createElement("option");
+    option.value = professional.name;
+    option.textContent = professional.name;
+    teamNoticeRecipient.append(option);
+});
+demoStudentProfiles.forEach((student) => {
+    const option = document.createElement("option");
+    option.value = student.name;
+    option.textContent = `${student.name} (${student.guardian})`;
+    teamNoticeStudent.append(option);
+});
 renderStudentList();
 renderTeamList();
 
@@ -683,6 +701,60 @@ function renderTeamProfile(professional) {
     teamListView.hidden = true;
     teamProfileView.hidden = false;
 }
+
+function renderTeamNotices() {
+    teamNoticeList.replaceChildren();
+    teamNotices.forEach((notice) => {
+        const article = document.createElement("article");
+        const header = document.createElement("header");
+        const author = document.createElement("strong");
+        const metadata = document.createElement("span");
+        const context = document.createElement("p");
+        const comment = document.createElement("p");
+        article.className = "team-notice-item";
+        header.className = "team-notice-item-header";
+        author.textContent = notice.author;
+        metadata.textContent = `Para ${notice.recipient} · ${new Intl.DateTimeFormat("pt-BR", { dateStyle: "short", timeStyle: "short" }).format(notice.createdAt)}`;
+        context.className = "team-notice-item-context";
+        context.textContent = `Sobre ${notice.student} · responsável ${notice.guardian}`;
+        comment.className = "team-notice-item-comment";
+        comment.textContent = notice.comment;
+        header.append(author, metadata);
+        article.append(header, context, comment);
+        teamNoticeList.append(article);
+    });
+    document.querySelector("#team-notice-empty").hidden = teamNotices.length > 0;
+}
+
+teamNoticeForm.addEventListener("submit", (event) => {
+    event.preventDefault();
+    const comment = teamNoticeComment.value.trim();
+    if (!comment) {
+        teamNoticeComment.setCustomValidity("Escreva um comentário antes de publicar.");
+        teamNoticeComment.reportValidity();
+        return;
+    }
+    const student = demoStudentProfiles.find((profile) => profile.name === teamNoticeStudent.value);
+    if (!student) return;
+
+    teamNotices.unshift({
+        author: currentProfile.name,
+        recipient: teamNoticeRecipient.value === "all" ? "toda a equipe" : teamNoticeRecipient.value,
+        student: student.name,
+        guardian: student.guardian,
+        comment,
+        createdAt: new Date()
+    });
+    teamNoticeComment.value = "";
+    teamNoticeComment.setCustomValidity("");
+    document.querySelector("#team-notice-feedback").textContent = "Aviso adicionado à lista desta sessão.";
+    renderTeamNotices();
+});
+
+teamNoticeComment.addEventListener("input", () => {
+    teamNoticeComment.setCustomValidity("");
+    document.querySelector("#team-notice-feedback").textContent = "";
+});
 
 function renderCommunications() {
     const days = Number(communicationPeriod.value);

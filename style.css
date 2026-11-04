@@ -1190,6 +1190,127 @@ input {
     margin-top: 18px;
 }
 
+.team-notice-section {
+    margin: 24px 0 30px;
+    padding: 18px 0 0;
+    border-top: 1px solid var(--line);
+}
+
+.team-notice-header h3 {
+    margin: 0 0 6px;
+    color: var(--teal-deep);
+    font-size: 18px;
+}
+
+.team-notice-header p {
+    margin: 0 0 16px;
+    color: var(--ink-soft);
+    font-size: 13px;
+}
+
+.team-notice-form {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+    max-width: 760px;
+}
+
+.team-notice-form label {
+    display: grid;
+    min-width: 0;
+    gap: 6px;
+    color: var(--ink-soft);
+    font-size: 12px;
+}
+
+.team-notice-form select,
+.team-notice-form textarea {
+    width: 100%;
+    min-width: 0;
+    padding: 10px;
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    background: #f8fcfc;
+    color: var(--ink);
+    font: inherit;
+}
+
+.team-notice-form select {
+    height: 40px;
+}
+
+.team-notice-comment-label,
+.team-notice-privacy-note {
+    grid-column: 1 / -1;
+}
+
+.team-notice-form textarea {
+    min-height: 84px;
+    resize: vertical;
+}
+
+.team-notice-privacy-note,
+.team-notice-feedback,
+.team-notice-empty {
+    margin: 0;
+    color: var(--ink-soft);
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+.team-notice-feedback:not(:empty) {
+    margin-top: 12px;
+    color: #286148;
+}
+
+.team-notice-list {
+    display: grid;
+    gap: 14px;
+    margin-top: 16px;
+}
+
+.team-notice-item {
+    padding-top: 12px;
+    border-top: 1px solid var(--line);
+}
+
+.team-notice-item-header {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 6px 16px;
+}
+
+.team-notice-item-header strong {
+    color: var(--ink);
+    font-size: 13px;
+}
+
+.team-notice-item-header span,
+.team-notice-item-context {
+    color: var(--ink-soft);
+    font-size: 12px;
+}
+
+.team-notice-item-context {
+    margin: 8px 0 4px;
+}
+
+.team-notice-item-comment {
+    margin: 0;
+    color: var(--ink);
+    font-size: 14px;
+    line-height: 1.5;
+    overflow-wrap: anywhere;
+    white-space: pre-wrap;
+}
+
+.team-notice-form :focus-visible {
+    outline: 2px solid var(--teal);
+    outline-offset: 2px;
+}
+
 .communication-metrics {
     max-width: 620px;
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -1559,6 +1680,15 @@ input {
     .communication-controls select {
         min-width: 0;
         width: 100%;
+    }
+
+    .team-notice-form {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .team-notice-comment-label,
+    .team-notice-privacy-note {
+        grid-column: auto;
     }
 
     .app-shell.sidebar-collapsed {
