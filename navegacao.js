@@ -174,6 +174,7 @@ const pageTitle = document.querySelector("#page-title");
 const sectionTitle = document.querySelector("#section-title");
 const sectionDescription = document.querySelector("#section-description");
 const dashboardView = document.querySelector("#dashboard-view");
+const agendaView = document.querySelector("#agenda-view");
 const appointmentsView = document.querySelector("#appointments-view");
 const studentsView = document.querySelector("#students-view");
 const reportsView = document.querySelector("#reports-view");
@@ -201,6 +202,13 @@ const appointmentsPageProfessional = document.querySelector("#appointments-page-
 const appointmentsPageArea = document.querySelector("#appointments-page-area");
 const appointmentsPageStatus = document.querySelector("#appointments-page-status");
 const appointmentsPageList = document.querySelector("#appointments-page-list");
+const agendaDayStrip = document.querySelector("#agenda-day-strip");
+const agendaPageFilters = document.querySelector("#agenda-page-filters");
+const agendaPageSearch = document.querySelector("#agenda-page-search");
+const agendaPageProfessional = document.querySelector("#agenda-page-professional");
+const agendaPageArea = document.querySelector("#agenda-page-area");
+const agendaPageStatus = document.querySelector("#agenda-page-status");
+const agendaDayList = document.querySelector("#agenda-day-list");
 const appointmentSearch = document.querySelector("#appointment-search");
 const filterPeriod = document.querySelector("#filter-period");
 const filterProfessional = document.querySelector("#filter-professional");
@@ -213,6 +221,7 @@ const whatsappLink = document.querySelector("#whatsapp-link");
 let selectedAppointment;
 let selectedStudentPhotoUrl = "";
 let currentReportAppointments = [];
+let selectedAgendaDate = new Date(dashboardToday);
 
 function populateFilter(select, values) {
     [...new Set(values)].sort((first, second) => first.localeCompare(second, "pt-BR")).forEach((value) => {
@@ -283,6 +292,8 @@ populateFilter(filterProfessional, demoAppointments.map((appointment) => appoint
 populateFilter(filterArea, demoAppointments.map((appointment) => appointment.area));
 populateFilter(appointmentsPageProfessional, demoAppointments.map((appointment) => appointment.professional));
 populateFilter(appointmentsPageArea, demoAppointments.map((appointment) => appointment.area));
+populateFilter(agendaPageProfessional, demoAppointments.map((appointment) => appointment.professional));
+populateFilter(agendaPageArea, demoAppointments.map((appointment) => appointment.area));
 renderStudentList();
 
 document.querySelector("#new-student-button").addEventListener("click", () => {
@@ -483,6 +494,88 @@ function renderAppointmentsPage() {
     document.querySelector("#appointments-page-empty").hidden = visibleAppointments.length > 0;
 }
 
+function renderAgendaDayStrip() {
+    const weekdayFormatter = new Intl.DateTimeFormat("pt-BR", { weekday: "short" });
+    const dateFormatter = new Intl.DateTimeFormat("pt-BR", { day: "2-digit", month: "2-digit" });
+    agendaDayStrip.replaceChildren();
+    for (let offset = 0; offset < 7; offset += 1) {
+        const date = new Date(dashboardToday);
+        date.setDate(date.getDate() + offset);
+        const count = demoAppointments.filter((appointment) => appointment.date.getTime() === date.getTime()).length;
+        const dayButton = document.createElement("button");
+        const weekday = document.createElement("span");
+        const dateLabel = document.createElement("strong");
+        const appointmentCount = document.createElement("span");
+        dayButton.className = "agenda-day-option";
+        dayButton.type = "button";
+        dayButton.dataset.date = String(date.getTime());
+        const appointmentLabel = count === 1 ? "atendimento" : "atendimentos";
+        dayButton.setAttribute("aria-label", `${offset === 0 ? "Hoje, " : ""}${weekdayFormatter.format(date)}, ${dateFormatter.format(date)}, ${count} ${appointmentLabel}`);
+        weekday.className = "agenda-day-weekday";
+        weekday.textContent = offset === 0 ? "Hoje" : weekdayFormatter.format(date).replace(".", "");
+        dateLabel.textContent = dateFormatter.format(date);
+        appointmentCount.className = "agenda-day-count";
+        appointmentCount.textContent = String(count);
+        dayButton.append(weekday, dateLabel, appointmentCount);
+        dayButton.addEventListener("click", () => {
+            selectedAgendaDate = date;
+            renderAgendaView();
+        });
+        agendaDayStrip.append(dayButton);
+    }
+}
+
+function renderAgendaView() {
+    const dateFormatter = new Intl.DateTimeFormat("pt-BR", { dateStyle: "full" });
+    const weekEnd = new Date(dashboardToday);
+    weekEnd.setDate(weekEnd.getDate() + 6);
+    const shortDateFormatter = new Intl.DateTimeFormat("pt-BR", { day: "2-digit", month: "2-digit", year: "numeric" });
+    document.querySelector("#agenda-week-range").textContent = `${shortDateFormatter.format(dashboardToday)} a ${shortDateFormatter.format(weekEnd)}`;
+    document.querySelector("#agenda-day-label").textContent = dateFormatter.format(selectedAgendaDate);
+    agendaDayStrip.querySelectorAll(".agenda-day-option").forEach((button) => {
+        const isSelected = Number(button.dataset.date) === selectedAgendaDate.getTime();
+        button.classList.toggle("is-selected", isSelected);
+        button.setAttribute("aria-pressed", String(isSelected));
+    });
+
+    const dayAppointments = demoAppointments.filter((appointment) => appointment.date.getTime() === selectedAgendaDate.getTime());
+    const visibleAppointments = filterAppointments(dayAppointments, {
+        search: agendaPageSearch.value,
+        professional: agendaPageProfessional.value,
+        area: agendaPageArea.value,
+        status: agendaPageStatus.value
+    }).sort((first, second) => first.time.localeCompare(second.time));
+    document.querySelector("#agenda-day-results").textContent = `${visibleAppointments.length} de ${dayAppointments.length} atendimentos neste dia`;
+    agendaDayList.replaceChildren();
+    visibleAppointments.forEach((appointment) => {
+        const row = document.createElement("tr");
+        [appointment.time, appointment.student, appointment.professional, appointment.area].forEach((value) => {
+            const cell = document.createElement("td");
+            cell.textContent = value;
+            row.append(cell);
+        });
+        const statusCell = document.createElement("td");
+        const status = document.createElement("span");
+        status.className = `agenda-status agenda-status-${appointment.status}`;
+        status.textContent = appointment.status === "pending" ? "Aguardando confirmação" : "Confirmado";
+        statusCell.append(status);
+        row.append(statusCell);
+
+        const actionCell = document.createElement("td");
+        const consultButton = document.createElement("button");
+        consultButton.className = "student-consult-button";
+        consultButton.type = "button";
+        consultButton.textContent = "Consultar";
+        consultButton.setAttribute("aria-label", `Consultar atendimento de ${appointment.student}`);
+        consultButton.addEventListener("click", () => openStudentDetails(appointment));
+        actionCell.append(consultButton);
+        row.append(actionCell);
+        agendaDayList.append(row);
+    });
+    document.querySelector("#agenda-day-table-scroll").hidden = visibleAppointments.length === 0;
+    document.querySelector("#agenda-day-empty").hidden = visibleAppointments.length > 0;
+}
+
 function renderReports() {
     const days = Number(reportPeriod.value);
     currentReportAppointments = getUpcomingAppointments(demoAppointments, dashboardToday, days);
@@ -584,6 +677,8 @@ whatsappForm.addEventListener("submit", (event) => {
 
 renderDashboard();
 renderAppointmentsPage();
+renderAgendaDayStrip();
+renderAgendaView();
 renderReports();
 reportPeriod.addEventListener("change", renderReports);
 exportReportButton.addEventListener("click", exportReport);
@@ -599,6 +694,18 @@ appointmentsPageFilters.addEventListener("reset", () => {
     appointmentsPageArea.value = "";
     appointmentsPageStatus.value = "";
     renderAppointmentsPage();
+});
+agendaPageFilters.addEventListener("submit", (event) => event.preventDefault());
+agendaPageSearch.addEventListener("input", renderAgendaView);
+[agendaPageProfessional, agendaPageArea, agendaPageStatus].forEach((select) => {
+    select.addEventListener("change", renderAgendaView);
+});
+agendaPageFilters.addEventListener("reset", () => {
+    agendaPageSearch.value = "";
+    agendaPageProfessional.value = "";
+    agendaPageArea.value = "";
+    agendaPageStatus.value = "";
+    renderAgendaView();
 });
 agendaFilters.addEventListener("submit", (event) => event.preventDefault());
 appointmentSearch.addEventListener("input", renderDashboard);
@@ -642,10 +749,11 @@ function renderPage() {
     const page = pages[pageKey];
 
     dashboardView.hidden = pageKey !== "dashboard";
+    agendaView.hidden = pageKey !== "agenda";
     appointmentsView.hidden = pageKey !== "atendimentos";
     studentsView.hidden = pageKey !== "alunos";
     reportsView.hidden = pageKey !== "relatorios";
-    pagePlaceholder.hidden = pageKey === "dashboard" || pageKey === "atendimentos" || pageKey === "alunos" || pageKey === "relatorios";
+    pagePlaceholder.hidden = pageKey === "dashboard" || pageKey === "agenda" || pageKey === "atendimentos" || pageKey === "alunos" || pageKey === "relatorios";
     pageTitle.textContent = page.title;
     sectionTitle.textContent = page.heading;
     sectionDescription.textContent = page.description;

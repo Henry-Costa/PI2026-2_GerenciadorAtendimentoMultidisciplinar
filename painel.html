@@ -104,6 +104,38 @@
 					<p id="appointments-empty" hidden>Nenhum atendimento corresponde à busca e aos filtros.</p>
 				</section>
 			</section>
+				<section id="agenda-view" class="agenda-view" hidden aria-labelledby="agenda-page-title">
+					<header class="agenda-page-header">
+						<div><h2 id="agenda-page-title">Agenda semanal</h2><p id="agenda-week-range"></p></div>
+					</header>
+					<div id="agenda-day-strip" class="agenda-day-strip" role="group" aria-label="Selecionar dia da agenda"></div>
+					<form id="agenda-page-filters" class="agenda-filters" aria-label="Filtrar atendimentos do dia">
+						<label class="agenda-search">Buscar aluno, profissional ou área
+							<input id="agenda-page-search" type="search" placeholder="Nome ou área de atendimento" autocomplete="off">
+						</label>
+						<label>Profissional
+							<select id="agenda-page-professional"><option value="">Todos</option></select>
+						</label>
+						<label>Área
+							<select id="agenda-page-area"><option value="">Todas</option></select>
+						</label>
+						<label>Status
+							<select id="agenda-page-status"><option value="">Todos</option><option value="pending">Aguardando confirmação</option><option value="confirmed">Confirmado</option></select>
+						</label>
+						<button class="agenda-reset" type="reset" title="Limpar filtros" aria-label="Limpar filtros"><i class="bi bi-arrow-counterclockwise" aria-hidden="true"></i></button>
+					</form>
+					<p id="agenda-day-label" class="agenda-period"></p>
+					<p id="agenda-day-results" class="agenda-results" role="status" aria-live="polite"></p>
+					<div id="agenda-day-table-scroll" class="agenda-table-scroll" role="region" aria-label="Atendimentos do dia" tabindex="0">
+						<table class="agenda-table">
+							<caption>Horários e atendimentos do dia selecionado</caption>
+							<thead><tr><th scope="col">Horário</th><th scope="col">Aluno</th><th scope="col">Profissional</th><th scope="col">Área</th><th scope="col">Status</th><th scope="col">Ações</th></tr></thead>
+							<tbody id="agenda-day-list"></tbody>
+						</table>
+					</div>
+					<p id="agenda-day-empty" hidden>Nenhum atendimento para este dia e estes filtros.</p>
+					<p class="agenda-demo-note">Agenda demonstrativa com dados fictícios; alterações não são salvas.</p>
+				</section>
 				<section id="appointments-view" class="appointments-view" hidden aria-labelledby="appointments-page-title">
 					<header class="appointments-page-header">
 						<div><h2 id="appointments-page-title">Atendimentos registrados</h2><p>Consulte e filtre os atendimentos demonstrativos.</p></div>
