@@ -137,6 +137,44 @@
 						</div>
 					</section>
 				</section>
+				<section id="reports-view" class="reports-view" hidden aria-labelledby="reports-title">
+					<header class="reports-header">
+						<div><h2 id="reports-title">Relatório de atendimentos</h2><p id="report-period-label"></p></div>
+						<div class="report-controls">
+							<label for="report-period">Período
+								<select id="report-period"><option value="7">Próximos 7 dias</option><option value="1">Hoje</option></select>
+							</label>
+							<button id="export-report" class="report-export-button" type="button"><i class="bi bi-download" aria-hidden="true"></i> Exportar CSV</button>
+						</div>
+					</header>
+					<p class="report-demo-note">Relatório baseado nos dados fictícios da demonstração.</p>
+					<dl class="dashboard-metrics report-metrics">
+						<div><dt>Atendimentos</dt><dd id="report-total"></dd></div>
+						<div><dt>Aguardando confirmação</dt><dd id="report-pending"></dd></div>
+						<div><dt>Confirmados</dt><dd id="report-confirmed"></dd></div>
+						<div><dt>Alunos atendidos</dt><dd id="report-students"></dd></div>
+					</dl>
+					<div class="report-distributions">
+						<section class="report-chart-section" aria-labelledby="report-area-title">
+							<h3 id="report-area-title">Atendimentos por área</h3>
+							<div id="report-area-chart" class="area-chart" role="list" aria-label="Atendimentos por área no período"></div>
+						</section>
+						<section class="report-chart-section" aria-labelledby="report-professional-title">
+							<h3 id="report-professional-title">Atendimentos por profissional</h3>
+							<div id="report-professional-chart" class="area-chart" role="list" aria-label="Atendimentos por profissional no período"></div>
+						</section>
+					</div>
+					<section class="report-detail-section" aria-labelledby="report-detail-title">
+						<h3 id="report-detail-title">Detalhamento por profissional e área</h3>
+						<div class="agenda-table-scroll" role="region" aria-label="Detalhamento do relatório" tabindex="0">
+							<table class="agenda-table report-table">
+								<caption>Atendimentos incluídos no período selecionado</caption>
+								<thead><tr><th scope="col">Profissional</th><th scope="col">Área</th><th scope="col">Total</th><th scope="col">Aguardando</th><th scope="col">Confirmados</th></tr></thead>
+								<tbody id="report-details"></tbody>
+							</table>
+						</div>
+					</section>
+				</section>
 				<dialog id="student-registration-dialog" class="student-dialog" aria-labelledby="student-registration-title">
 					<div class="student-dialog-heading">
 						<h2 id="student-registration-title">Cadastro de aluno</h2>

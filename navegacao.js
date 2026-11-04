@@ -58,6 +58,35 @@ function filterAppointments(appointments, filters) {
     });
 }
 
+function renderCountChart(chart, appointments, property) {
+    const counts = appointments.reduce((summary, appointment) => {
+        summary[appointment[property]] = (summary[appointment[property]] || 0) + 1;
+        return summary;
+    }, {});
+    const maximumCount = Math.max(1, ...Object.values(counts));
+    chart.replaceChildren();
+    Object.entries(counts).sort(([first], [second]) => first.localeCompare(second, "pt-BR")).forEach(([labelText, count]) => {
+        const row = document.createElement("div");
+        const label = document.createElement("span");
+        const track = document.createElement("span");
+        const bar = document.createElement("span");
+        const value = document.createElement("strong");
+        row.className = "area-chart-row";
+        row.setAttribute("role", "listitem");
+        label.className = "area-chart-label";
+        label.textContent = labelText;
+        track.className = "area-chart-track";
+        bar.className = "area-chart-bar";
+        bar.style.width = `${(count / maximumCount) * 100}%`;
+        value.className = "area-chart-value";
+        value.textContent = String(count);
+        value.setAttribute("aria-label", `${count} atendimentos`);
+        track.append(bar);
+        row.append(label, track, value);
+        chart.append(row);
+    });
+}
+
 const quickLinksData = [
     { label: "Dashboard", href: "#dashboard", icon: "bi-house" },
     { label: "Alunos", href: "#alunos", icon: "bi-mortarboard" },
@@ -146,6 +175,7 @@ const sectionTitle = document.querySelector("#section-title");
 const sectionDescription = document.querySelector("#section-description");
 const dashboardView = document.querySelector("#dashboard-view");
 const studentsView = document.querySelector("#students-view");
+const reportsView = document.querySelector("#reports-view");
 const studentsList = document.querySelector("#students-list");
 const studentListView = document.querySelector("#student-list-view");
 const studentProfileView = document.querySelector("#student-profile-view");
@@ -159,6 +189,8 @@ const newStudentContact = document.querySelector("#new-student-contact");
 const newStudentArea = document.querySelector("#new-student-area");
 const newStudentPhoto = document.querySelector("#new-student-photo");
 const studentPhotoPreview = document.querySelector("#student-photo-preview");
+const reportPeriod = document.querySelector("#report-period");
+const exportReportButton = document.querySelector("#export-report");
 const pagePlaceholder = document.querySelector("#page-placeholder");
 const agendaFilters = document.querySelector("#agenda-filters");
 const appointmentSearch = document.querySelector("#appointment-search");
@@ -172,6 +204,7 @@ const whatsappPhone = document.querySelector("#student-whatsapp");
 const whatsappLink = document.querySelector("#whatsapp-link");
 let selectedAppointment;
 let selectedStudentPhotoUrl = "";
+let currentReportAppointments = [];
 
 function populateFilter(select, values) {
     [...new Set(values)].sort((first, second) => first.localeCompare(second, "pt-BR")).forEach((value) => {
@@ -346,33 +379,7 @@ function renderDashboard() {
         document.querySelector(`#metric-${metric}`).textContent = value;
     });
 
-    const appointmentsByArea = appointments.reduce((counts, appointment) => {
-        counts[appointment.area] = (counts[appointment.area] || 0) + 1;
-        return counts;
-    }, {});
-    const maximumAreaCount = Math.max(1, ...Object.values(appointmentsByArea));
-    const areaChart = document.querySelector("#area-chart");
-    areaChart.replaceChildren();
-    Object.entries(appointmentsByArea).sort(([first], [second]) => first.localeCompare(second, "pt-BR")).forEach(([area, count]) => {
-        const row = document.createElement("div");
-        const label = document.createElement("span");
-        const track = document.createElement("span");
-        const bar = document.createElement("span");
-        const value = document.createElement("strong");
-        row.className = "area-chart-row";
-        row.setAttribute("role", "listitem");
-        label.className = "area-chart-label";
-        label.textContent = area;
-        track.className = "area-chart-track";
-        bar.className = "area-chart-bar";
-        bar.style.width = `${(count / maximumAreaCount) * 100}%`;
-        value.className = "area-chart-value";
-        value.textContent = String(count);
-        value.setAttribute("aria-label", `${count} atendimentos`);
-        track.append(bar);
-        row.append(label, track, value);
-        areaChart.append(row);
-    });
+    renderCountChart(document.querySelector("#area-chart"), appointments, "area");
 
     const dateFormatter = new Intl.DateTimeFormat("pt-BR", { day: "2-digit", month: "2-digit", year: "numeric" });
     const days = Number(filterPeriod.value);
@@ -420,6 +427,72 @@ function renderDashboard() {
     document.querySelector("#appointments-empty").hidden = visibleAppointments.length > 0;
 }
 
+function renderReports() {
+    const days = Number(reportPeriod.value);
+    currentReportAppointments = getUpcomingAppointments(demoAppointments, dashboardToday, days);
+    const summary = {
+        total: currentReportAppointments.length,
+        pending: currentReportAppointments.filter((appointment) => appointment.status === "pending").length,
+        confirmed: currentReportAppointments.filter((appointment) => appointment.status === "confirmed").length,
+        students: new Set(currentReportAppointments.map((appointment) => appointment.student)).size
+    };
+    Object.entries(summary).forEach(([metric, value]) => {
+        document.querySelector(`#report-${metric}`).textContent = value;
+    });
+
+    const dateFormatter = new Intl.DateTimeFormat("pt-BR", { day: "2-digit", month: "2-digit", year: "numeric" });
+    const lastDay = new Date(dashboardToday);
+    lastDay.setDate(lastDay.getDate() + days - 1);
+    document.querySelector("#report-period-label").textContent = `${dateFormatter.format(dashboardToday)} a ${dateFormatter.format(lastDay)} (inclui hoje)`;
+    renderCountChart(document.querySelector("#report-area-chart"), currentReportAppointments, "area");
+    renderCountChart(document.querySelector("#report-professional-chart"), currentReportAppointments, "professional");
+
+    const reportGroups = currentReportAppointments.reduce((groups, appointment) => {
+        const key = `${appointment.professional}\u0000${appointment.area}`;
+        if (!groups[key]) {
+            groups[key] = { professional: appointment.professional, area: appointment.area, total: 0, pending: 0, confirmed: 0 };
+        }
+        groups[key].total += 1;
+        groups[key][appointment.status] += 1;
+        return groups;
+    }, {});
+    const reportDetails = document.querySelector("#report-details");
+    reportDetails.replaceChildren();
+    Object.values(reportGroups).sort((first, second) => first.professional.localeCompare(second.professional, "pt-BR") || first.area.localeCompare(second.area, "pt-BR")).forEach((group) => {
+        const row = document.createElement("tr");
+        [group.professional, group.area, group.total, group.pending, group.confirmed].forEach((value) => {
+            const cell = document.createElement("td");
+            cell.textContent = value;
+            row.append(cell);
+        });
+        reportDetails.append(row);
+    });
+}
+
+function exportReport() {
+    const dateFormatter = new Intl.DateTimeFormat("pt-BR", { day: "2-digit", month: "2-digit", year: "numeric" });
+    const rows = [
+        ["Data", "Horário", "Aluno", "Profissional", "Área", "Status"],
+        ...currentReportAppointments.map((appointment) => [
+            dateFormatter.format(appointment.date),
+            appointment.time,
+            appointment.student,
+            appointment.professional,
+            appointment.area,
+            appointment.status === "pending" ? "Aguardando confirmação" : "Confirmado"
+        ])
+    ];
+    const csv = `\uFEFF${rows.map((row) => row.map((value) => `"${String(value).replace(/"/g, '""')}"`).join(";")).join("\r\n")}`;
+    const fileUrl = URL.createObjectURL(new Blob([csv], { type: "text/csv;charset=utf-8" }));
+    const downloadLink = document.createElement("a");
+    downloadLink.href = fileUrl;
+    downloadLink.download = `relatorio-atendimentos-${reportPeriod.value}-dias.csv`;
+    document.body.append(downloadLink);
+    downloadLink.click();
+    downloadLink.remove();
+    setTimeout(() => URL.revokeObjectURL(fileUrl), 1000);
+}
+
 function openStudentDetails(appointment) {
     selectedAppointment = appointment;
     const dateFormatter = new Intl.DateTimeFormat("pt-BR", { dateStyle: "long" });
@@ -454,6 +527,9 @@ whatsappForm.addEventListener("submit", (event) => {
 });
 
 renderDashboard();
+renderReports();
+reportPeriod.addEventListener("change", renderReports);
+exportReportButton.addEventListener("click", exportReport);
 agendaFilters.addEventListener("submit", (event) => event.preventDefault());
 appointmentSearch.addEventListener("input", renderDashboard);
 [filterPeriod, filterProfessional, filterArea, filterStatus].forEach((select) => {
@@ -497,7 +573,8 @@ function renderPage() {
 
     dashboardView.hidden = pageKey !== "dashboard";
     studentsView.hidden = pageKey !== "alunos";
-    pagePlaceholder.hidden = pageKey === "dashboard" || pageKey === "alunos";
+    reportsView.hidden = pageKey !== "relatorios";
+    pagePlaceholder.hidden = pageKey === "dashboard" || pageKey === "alunos" || pageKey === "relatorios";
     pageTitle.textContent = page.title;
     sectionTitle.textContent = page.heading;
     sectionDescription.textContent = page.description;

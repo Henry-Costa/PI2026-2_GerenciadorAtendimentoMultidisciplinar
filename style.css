@@ -1083,6 +1083,117 @@ input {
     outline-offset: 2px;
 }
 
+.reports-view {
+    max-width: 1100px;
+    padding-top: 24px;
+}
+
+.reports-view[hidden] {
+    display: none;
+}
+
+.reports-header,
+.report-controls {
+    display: flex;
+    align-items: end;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 16px;
+}
+
+.reports-header h2 {
+    margin: 0 0 8px;
+    color: var(--teal-deep);
+    font-size: 22px;
+}
+
+.reports-header p,
+.report-demo-note {
+    margin: 0;
+    color: var(--ink-soft);
+    font-size: 13px;
+}
+
+.report-controls {
+    justify-content: flex-end;
+}
+
+.report-controls label {
+    display: grid;
+    gap: 6px;
+    color: var(--ink-soft);
+    font-size: 12px;
+}
+
+.report-controls select {
+    min-width: 170px;
+    height: 40px;
+    padding: 0 10px;
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    background: #f8fcfc;
+    color: var(--ink);
+    font: inherit;
+}
+
+.report-export-button {
+    display: inline-flex;
+    min-height: 40px;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 8px 14px;
+    border: 1px solid var(--teal-deep);
+    border-radius: 4px;
+    background: var(--teal-deep);
+    color: #fff;
+    font: inherit;
+    cursor: pointer;
+}
+
+.report-export-button:hover {
+    background: #245c61;
+}
+
+.report-export-button:focus-visible,
+.report-controls select:focus-visible {
+    outline: 2px solid var(--teal);
+    outline-offset: 2px;
+}
+
+.report-demo-note {
+    margin-top: 16px;
+}
+
+.report-metrics {
+    margin-top: 22px;
+}
+
+.report-distributions {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 28px;
+    margin: 32px 0;
+}
+
+.report-chart-section,
+.report-detail-section {
+    min-width: 0;
+    padding-top: 16px;
+    border-top: 1px solid var(--line);
+}
+
+.report-chart-section h3,
+.report-detail-section h3 {
+    margin: 0 0 16px;
+    color: var(--teal-deep);
+    font-size: 17px;
+}
+
+.report-table {
+    min-width: 680px;
+}
+
 @media (max-width: 1000px) {
     .dashboard-metrics {
         grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -1174,6 +1285,16 @@ input {
 
     .students-heading {
         flex-direction: column;
+    }
+
+    .report-distributions {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 20px;
+    }
+
+    .report-controls {
+        width: 100%;
+        justify-content: flex-start;
     }
 
     .app-shell.sidebar-collapsed {

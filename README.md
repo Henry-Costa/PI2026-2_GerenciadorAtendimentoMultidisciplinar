@@ -12,7 +12,7 @@ O projeto usa HTML, CSS e JavaScript sem frameworks. Os ícones Bootstrap Icons 
 
 ## Etapa atual
 
-Dashboard concluído em modo demonstrativo. Contém perfil, saudação conforme `currentProfile`, data local, quatro KPIs calculados e gráfico de atendimentos por área nos próximos sete dias. A agenda exibe os próximos atendimentos, ordenados por data e horário. Não há autenticação ou banco conectado. O atalho de relatórios aparece somente no Dashboard; a página de relatórios ainda não foi implementada.
+Dashboard e relatórios concluídos em modo demonstrativo. O Dashboard contém perfil, saudação conforme `currentProfile`, data local, quatro KPIs calculados e gráfico de atendimentos por área nos próximos sete dias. A agenda exibe os próximos atendimentos, ordenados por data e horário. Relatórios permitem filtrar hoje ou próximos sete dias, comparar resultados por área e profissional e exportar CSV. Não há autenticação ou banco conectado.
 
 A agenda permite buscar aluno, profissional ou área sem distinção de acentos, combinar filtros de profissional, área e status, escolher entre hoje e os próximos sete dias e limpar todos os controles. A contagem de resultados acompanha a tabela; os KPIs mantêm o resumo dos próximos sete dias, independentemente dos filtros.
 
