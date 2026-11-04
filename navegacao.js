@@ -149,6 +149,16 @@ const studentsView = document.querySelector("#students-view");
 const studentsList = document.querySelector("#students-list");
 const studentListView = document.querySelector("#student-list-view");
 const studentProfileView = document.querySelector("#student-profile-view");
+const studentProfilePhoto = document.querySelector("#student-profile-photo");
+const studentRegistrationDialog = document.querySelector("#student-registration-dialog");
+const studentRegistrationForm = document.querySelector("#student-registration-form");
+const newStudentName = document.querySelector("#new-student-name");
+const newStudentBirthDate = document.querySelector("#new-student-birth-date");
+const newStudentGuardian = document.querySelector("#new-student-guardian");
+const newStudentContact = document.querySelector("#new-student-contact");
+const newStudentArea = document.querySelector("#new-student-area");
+const newStudentPhoto = document.querySelector("#new-student-photo");
+const studentPhotoPreview = document.querySelector("#student-photo-preview");
 const pagePlaceholder = document.querySelector("#page-placeholder");
 const agendaFilters = document.querySelector("#agenda-filters");
 const appointmentSearch = document.querySelector("#appointment-search");
@@ -161,6 +171,7 @@ const whatsappForm = document.querySelector("#whatsapp-form");
 const whatsappPhone = document.querySelector("#student-whatsapp");
 const whatsappLink = document.querySelector("#whatsapp-link");
 let selectedAppointment;
+let selectedStudentPhotoUrl = "";
 
 function populateFilter(select, values) {
     [...new Set(values)].sort((first, second) => first.localeCompare(second, "pt-BR")).forEach((value) => {
@@ -200,6 +211,8 @@ function renderStudentList() {
 
 function renderStudentProfile(student, dateFormatter) {
     document.querySelector("#student-profile-title").textContent = student.name;
+    studentProfilePhoto.src = student.photoUrl || "";
+    studentProfilePhoto.hidden = !student.photoUrl;
     document.querySelector("#profile-birth-date").textContent = new Intl.DateTimeFormat("pt-BR", { dateStyle: "long", timeZone: "UTC" }).format(new Date(`${student.birthDate}T12:00:00Z`));
     document.querySelector("#profile-guardian").textContent = student.guardian;
     document.querySelector("#profile-contact").textContent = student.contact;
@@ -228,6 +241,85 @@ function renderStudentProfile(student, dateFormatter) {
 populateFilter(filterProfessional, demoAppointments.map((appointment) => appointment.professional));
 populateFilter(filterArea, demoAppointments.map((appointment) => appointment.area));
 renderStudentList();
+
+document.querySelector("#new-student-button").addEventListener("click", () => {
+    studentRegistrationForm.reset();
+    const today = new Date();
+    newStudentBirthDate.max = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`;
+    studentPhotoPreview.hidden = true;
+    studentRegistrationDialog.showModal();
+    newStudentName.focus();
+});
+
+newStudentName.addEventListener("input", () => newStudentName.setCustomValidity(""));
+newStudentContact.addEventListener("input", () => {
+    const digits = newStudentContact.value.replace(/\D/g, "").slice(0, 11);
+    if (digits.length <= 2) {
+        newStudentContact.value = digits ? `(${digits}` : "";
+    } else if (digits.length <= 6) {
+        newStudentContact.value = `(${digits.slice(0, 2)}) ${digits.slice(2)}`;
+    } else {
+        const subscriberLength = digits.length === 11 ? 5 : 4;
+        newStudentContact.value = `(${digits.slice(0, 2)}) ${digits.slice(2, 2 + subscriberLength)}-${digits.slice(2 + subscriberLength)}`;
+    }
+});
+
+newStudentPhoto.addEventListener("change", () => {
+    const file = newStudentPhoto.files[0];
+    if (selectedStudentPhotoUrl) URL.revokeObjectURL(selectedStudentPhotoUrl);
+    selectedStudentPhotoUrl = "";
+    if (!file) {
+        studentPhotoPreview.hidden = true;
+        return;
+    }
+    if (!["image/png", "image/jpeg", "image/webp"].includes(file.type) || file.size > 2 * 1024 * 1024) {
+        newStudentPhoto.setCustomValidity("Selecione uma imagem de até 2 MB.");
+        newStudentPhoto.reportValidity();
+        newStudentPhoto.value = "";
+        studentPhotoPreview.hidden = true;
+        return;
+    }
+    newStudentPhoto.setCustomValidity("");
+    selectedStudentPhotoUrl = URL.createObjectURL(file);
+    studentPhotoPreview.src = selectedStudentPhotoUrl;
+    studentPhotoPreview.hidden = false;
+});
+
+newStudentPhoto.addEventListener("input", () => newStudentPhoto.setCustomValidity(""));
+studentRegistrationDialog.addEventListener("close", () => {
+    studentRegistrationForm.reset();
+    studentPhotoPreview.hidden = true;
+    studentPhotoPreview.removeAttribute("src");
+    if (selectedStudentPhotoUrl) URL.revokeObjectURL(selectedStudentPhotoUrl);
+    selectedStudentPhotoUrl = "";
+});
+
+studentRegistrationForm.addEventListener("submit", (event) => {
+    event.preventDefault();
+    const normalizedName = normalizeSearch(newStudentName.value);
+    if (demoStudentProfiles.some((student) => normalizeSearch(student.name) === normalizedName)) {
+        newStudentName.setCustomValidity("Já existe um aluno com esse nome na demonstração.");
+        newStudentName.reportValidity();
+        return;
+    }
+    newStudentName.setCustomValidity("");
+
+    const photoUrl = selectedStudentPhotoUrl;
+    demoStudentProfiles.unshift({
+        name: newStudentName.value.trim(),
+        birthDate: newStudentBirthDate.value,
+        guardian: newStudentGuardian.value.trim(),
+        contact: newStudentContact.value,
+        area: newStudentArea.value,
+        history: [],
+        photoUrl
+    });
+    selectedStudentPhotoUrl = "";
+    renderStudentList();
+    studentProfileView.hidden = true;
+    studentListView.hidden = false;
+    studentRegistrationDialog.close();
+});
 
 document.querySelector("#student-list-back").addEventListener("click", () => {
     studentProfileView.hidden = true;

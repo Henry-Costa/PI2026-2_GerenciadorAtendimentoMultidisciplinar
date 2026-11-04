@@ -93,6 +93,8 @@ Cada incremento será validado e commitado localmente antes do próximo. O envio
 - Upload de imagem
 - Validações
 
+**Status:** concluído em modo demonstrativo. Os cadastros ficam apenas em memória e não persistem após recarregar a página.
+
 ### Responsividade e Ajustes Visuais
 
 **Duração:** 1 dia

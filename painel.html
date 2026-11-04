@@ -103,7 +103,8 @@
 				<section id="students-view" class="students-view" hidden aria-labelledby="students-title">
 					<div id="student-list-view">
 						<div class="students-heading">
-							<div><h2 id="students-title">Alunos cadastrados</h2><p>Registros fictícios para demonstração; os dados não são persistidos.</p></div>
+							<div><h2 id="students-title">Alunos cadastrados</h2><p>Registros demonstrativos; os dados não são persistidos.</p></div>
+							<button id="new-student-button" class="new-student-button" type="button"><i class="bi bi-person-plus" aria-hidden="true"></i> Novo aluno</button>
 						</div>
 						<div class="agenda-table-scroll" role="region" aria-label="Lista de alunos" tabindex="0">
 							<table class="agenda-table students-table">
@@ -115,6 +116,7 @@
 					</div>
 					<section id="student-profile-view" class="student-profile-view" hidden aria-labelledby="student-profile-title">
 						<button id="student-list-back" class="student-list-back" type="button"><i class="bi bi-arrow-left" aria-hidden="true"></i> Voltar para alunos</button>
+						<img id="student-profile-photo" class="student-profile-photo" alt="" hidden>
 						<h2 id="student-profile-title"></h2>
 						<dl class="student-profile-details">
 							<div><dt>Data de nascimento</dt><dd id="profile-birth-date"></dd></div>
@@ -131,6 +133,30 @@
 						</div>
 					</section>
 				</section>
+				<dialog id="student-registration-dialog" class="student-dialog" aria-labelledby="student-registration-title">
+					<div class="student-dialog-heading">
+						<h2 id="student-registration-title">Cadastro de aluno</h2>
+						<form method="dialog"><button class="student-dialog-close" type="submit" aria-label="Fechar cadastro" title="Fechar cadastro"><i class="bi bi-x-lg" aria-hidden="true"></i></button></form>
+					</div>
+					<form id="student-registration-form" class="student-registration-form">
+						<label>Nome completo<input id="new-student-name" name="name" autocomplete="name" required></label>
+						<label>Data de nascimento<input id="new-student-birth-date" name="birthDate" type="date" required></label>
+						<label>Nome do responsável<input id="new-student-guardian" name="guardian" autocomplete="name" required></label>
+						<label>Telefone de contato<input id="new-student-contact" name="contact" type="tel" inputmode="tel" autocomplete="tel" placeholder="(11) 99999-9999" pattern="\(\d{2}\) \d{4,5}-\d{4}" required></label>
+						<label>Área de acompanhamento
+							<select id="new-student-area" name="area" required>
+								<option value="">Selecione uma área</option>
+								<option>Fonoaudiologia</option>
+								<option>Psicologia</option>
+								<option>Terapia Ocupacional</option>
+							</select>
+						</label>
+						<label>Foto (opcional)<input id="new-student-photo" name="photo" type="file" accept="image/png,image/jpeg,image/webp"></label>
+						<img id="student-photo-preview" class="student-photo-preview" alt="Prévia da foto selecionada" hidden>
+						<p class="student-form-note">Cadastro demonstrativo, sem gravação permanente.</p>
+						<button class="new-student-button" type="submit"><i class="bi bi-check-lg" aria-hidden="true"></i> Cadastrar aluno</button>
+					</form>
+				</dialog>
 			<dialog id="student-dialog" class="student-dialog" aria-labelledby="student-dialog-title">
 				<div class="student-dialog-heading">
 					<h2 id="student-dialog-title">Consulta do aluno</h2>

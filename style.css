@@ -882,6 +882,33 @@ input {
     font-size: 13px;
 }
 
+.students-heading {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.new-student-button {
+    display: inline-flex;
+    min-height: 40px;
+    flex: 0 0 auto;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 8px 14px;
+    border: 1px solid var(--teal-deep);
+    border-radius: 4px;
+    background: var(--teal-deep);
+    color: #fff;
+    font: inherit;
+    cursor: pointer;
+}
+
+.new-student-button:hover {
+    background: #245c61;
+}
+
 .students-table {
     min-width: 700px;
 }
@@ -928,6 +955,64 @@ input {
     margin: 0 0 12px;
     color: var(--teal-deep);
     font-size: 18px;
+}
+
+.student-profile-photo,
+.student-photo-preview {
+    width: 96px;
+    height: 96px;
+    object-fit: cover;
+    border: 1px solid var(--line);
+    border-radius: 4px;
+}
+
+.student-profile-photo[hidden],
+.student-photo-preview[hidden] {
+    display: none;
+}
+
+.student-registration-form {
+    display: grid;
+    gap: 14px;
+    margin-top: 20px;
+}
+
+.student-registration-form label {
+    display: grid;
+    gap: 6px;
+    color: var(--ink-soft);
+    font-size: 12px;
+}
+
+.student-registration-form input:not([type="file"]),
+.student-registration-form select {
+    width: 100%;
+    min-width: 0;
+    height: 40px;
+    padding: 0 10px;
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    background: #f8fcfc;
+    color: var(--ink);
+    font: inherit;
+}
+
+.student-registration-form input[type="file"] {
+    max-width: 100%;
+    color: var(--ink);
+    font: inherit;
+}
+
+.student-form-note {
+    margin: 0;
+    color: var(--ink-soft);
+    font-size: 12px;
+}
+
+.student-registration-form :focus-visible,
+.new-student-button:focus-visible {
+    outline: 2px solid var(--teal);
+    outline-offset: 2px;
 }
 
 .student-list-back:focus-visible {
@@ -1017,6 +1102,10 @@ input {
 
     .student-profile-details {
         grid-template-columns: minmax(0, 1fr);
+    }
+
+    .students-heading {
+        flex-direction: column;
     }
 
     .app-shell.sidebar-collapsed {
