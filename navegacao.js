@@ -19,6 +19,11 @@ const demoAppointments = [
     return { ...appointment, date };
 });
 
+const demoProfessionals = [...new Map(demoAppointments.map((appointment) => [
+    appointment.professional,
+    { name: appointment.professional, area: appointment.area }
+])).values()];
+
 const demoStudentProfiles = [
     { name: "Alice Martins", birthDate: "2017-03-14", guardian: "Renata Martins", contact: "(11) 90000-0001", area: "Psicologia", history: [{ dayOffset: -21, time: "09:00", professional: "Marina Costa", area: "Psicologia", status: "confirmed" }] },
     { name: "Theo Ferreira", birthDate: "2016-08-22", guardian: "Patrícia Ferreira", contact: "(11) 90000-0002", area: "Fonoaudiologia", history: [{ dayOffset: -14, time: "10:30", professional: "Camila Rocha", area: "Fonoaudiologia", status: "confirmed" }] },
@@ -176,6 +181,7 @@ const sectionDescription = document.querySelector("#section-description");
 const dashboardView = document.querySelector("#dashboard-view");
 const agendaView = document.querySelector("#agenda-view");
 const appointmentsView = document.querySelector("#appointments-view");
+const teamView = document.querySelector("#team-view");
 const studentsView = document.querySelector("#students-view");
 const reportsView = document.querySelector("#reports-view");
 const studentsList = document.querySelector("#students-list");
@@ -209,6 +215,13 @@ const agendaPageProfessional = document.querySelector("#agenda-page-professional
 const agendaPageArea = document.querySelector("#agenda-page-area");
 const agendaPageStatus = document.querySelector("#agenda-page-status");
 const agendaDayList = document.querySelector("#agenda-day-list");
+const teamListView = document.querySelector("#team-list-view");
+const teamProfileView = document.querySelector("#team-profile-view");
+const teamFilters = document.querySelector("#team-filters");
+const teamSearch = document.querySelector("#team-search");
+const teamAreaFilter = document.querySelector("#team-area-filter");
+const teamList = document.querySelector("#team-list");
+const teamProfileAppointments = document.querySelector("#team-profile-appointments");
 const appointmentSearch = document.querySelector("#appointment-search");
 const filterPeriod = document.querySelector("#filter-period");
 const filterProfessional = document.querySelector("#filter-professional");
@@ -294,7 +307,23 @@ populateFilter(appointmentsPageProfessional, demoAppointments.map((appointment) 
 populateFilter(appointmentsPageArea, demoAppointments.map((appointment) => appointment.area));
 populateFilter(agendaPageProfessional, demoAppointments.map((appointment) => appointment.professional));
 populateFilter(agendaPageArea, demoAppointments.map((appointment) => appointment.area));
+populateFilter(teamAreaFilter, demoProfessionals.map((professional) => professional.area));
 renderStudentList();
+renderTeamList();
+
+document.querySelector("#team-list-back").addEventListener("click", () => {
+    teamProfileView.hidden = true;
+    teamListView.hidden = false;
+});
+
+teamFilters.addEventListener("submit", (event) => event.preventDefault());
+teamSearch.addEventListener("input", renderTeamList);
+teamAreaFilter.addEventListener("change", renderTeamList);
+teamFilters.addEventListener("reset", () => {
+    teamSearch.value = "";
+    teamAreaFilter.value = "";
+    renderTeamList();
+});
 
 document.querySelector("#new-student-button").addEventListener("click", () => {
     studentRegistrationForm.reset();
@@ -576,6 +605,78 @@ function renderAgendaView() {
     document.querySelector("#agenda-day-empty").hidden = visibleAppointments.length > 0;
 }
 
+function renderTeamList() {
+    const search = normalizeSearch(teamSearch.value);
+    const professionals = demoProfessionals
+        .filter((professional) => normalizeSearch(`${professional.name} ${professional.area}`).includes(search)
+            && (!teamAreaFilter.value || professional.area === teamAreaFilter.value))
+        .sort((first, second) => first.name.localeCompare(second.name, "pt-BR"));
+    teamList.replaceChildren();
+    professionals.forEach((professional) => {
+        const upcoming = getUpcomingAppointments(
+            demoAppointments.filter((appointment) => appointment.professional === professional.name),
+            dashboardToday
+        );
+        const row = document.createElement("tr");
+        [professional.name, professional.area, String(upcoming.length)].forEach((value) => {
+            const cell = document.createElement("td");
+            cell.textContent = value;
+            row.append(cell);
+        });
+        const actionCell = document.createElement("td");
+        const profileButton = document.createElement("button");
+        profileButton.className = "student-consult-button";
+        profileButton.type = "button";
+        profileButton.textContent = "Ver agenda";
+        profileButton.setAttribute("aria-label", `Ver agenda de ${professional.name}`);
+        profileButton.addEventListener("click", () => renderTeamProfile(professional));
+        actionCell.append(profileButton);
+        row.append(actionCell);
+        teamList.append(row);
+    });
+    document.querySelector("#team-results").textContent = `${professionals.length} profissionais encontrados`;
+    document.querySelector("#team-table-scroll").hidden = professionals.length === 0;
+    document.querySelector("#team-empty").hidden = professionals.length > 0;
+}
+
+function renderTeamProfile(professional) {
+    document.querySelector("#team-profile-title").textContent = professional.name;
+    document.querySelector("#team-profile-area").textContent = professional.area;
+    const dateFormatter = new Intl.DateTimeFormat("pt-BR", { day: "2-digit", month: "2-digit", year: "numeric" });
+    const appointments = getUpcomingAppointments(
+        demoAppointments.filter((appointment) => appointment.professional === professional.name),
+        dashboardToday
+    );
+    teamProfileAppointments.replaceChildren();
+    appointments.forEach((appointment) => {
+        const row = document.createElement("tr");
+        [dateFormatter.format(appointment.date), appointment.time, appointment.student].forEach((value) => {
+            const cell = document.createElement("td");
+            cell.textContent = value;
+            row.append(cell);
+        });
+        const statusCell = document.createElement("td");
+        const status = document.createElement("span");
+        status.className = `agenda-status agenda-status-${appointment.status}`;
+        status.textContent = appointment.status === "pending" ? "Aguardando confirmação" : "Confirmado";
+        statusCell.append(status);
+        row.append(statusCell);
+        const actionCell = document.createElement("td");
+        const consultButton = document.createElement("button");
+        consultButton.className = "student-consult-button";
+        consultButton.type = "button";
+        consultButton.textContent = "Consultar";
+        consultButton.setAttribute("aria-label", `Consultar atendimento de ${appointment.student}`);
+        consultButton.addEventListener("click", () => openStudentDetails(appointment));
+        actionCell.append(consultButton);
+        row.append(actionCell);
+        teamProfileAppointments.append(row);
+    });
+    document.querySelector("#team-profile-empty").hidden = appointments.length > 0;
+    teamListView.hidden = true;
+    teamProfileView.hidden = false;
+}
+
 function renderReports() {
     const days = Number(reportPeriod.value);
     currentReportAppointments = getUpcomingAppointments(demoAppointments, dashboardToday, days);
@@ -751,9 +852,10 @@ function renderPage() {
     dashboardView.hidden = pageKey !== "dashboard";
     agendaView.hidden = pageKey !== "agenda";
     appointmentsView.hidden = pageKey !== "atendimentos";
+    teamView.hidden = pageKey !== "equipe";
     studentsView.hidden = pageKey !== "alunos";
     reportsView.hidden = pageKey !== "relatorios";
-    pagePlaceholder.hidden = pageKey === "dashboard" || pageKey === "agenda" || pageKey === "atendimentos" || pageKey === "alunos" || pageKey === "relatorios";
+    pagePlaceholder.hidden = pageKey === "dashboard" || pageKey === "agenda" || pageKey === "atendimentos" || pageKey === "equipe" || pageKey === "alunos" || pageKey === "relatorios";
     pageTitle.textContent = page.title;
     sectionTitle.textContent = page.heading;
     sectionDescription.textContent = page.description;

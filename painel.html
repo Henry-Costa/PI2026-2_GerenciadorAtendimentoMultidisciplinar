@@ -169,6 +169,45 @@
 					</div>
 					<p id="appointments-page-empty" hidden>Nenhum atendimento corresponde à busca e aos filtros.</p>
 				</section>
+				<section id="team-view" class="team-view" hidden aria-labelledby="team-title">
+					<div id="team-list-view">
+						<header class="team-page-header">
+							<h2 id="team-title">Profissionais</h2>
+							<p>Equipe associada aos atendimentos demonstrativos.</p>
+						</header>
+						<form id="team-filters" class="agenda-filters" aria-label="Buscar e filtrar profissionais">
+							<label class="agenda-search">Buscar profissional ou área
+								<input id="team-search" type="search" placeholder="Nome ou área de atuação" autocomplete="off">
+							</label>
+							<label>Área
+								<select id="team-area-filter"><option value="">Todas</option></select>
+							</label>
+							<button class="agenda-reset" type="reset" title="Limpar filtros" aria-label="Limpar filtros"><i class="bi bi-arrow-counterclockwise" aria-hidden="true"></i></button>
+						</form>
+						<p id="team-results" class="agenda-results" role="status" aria-live="polite"></p>
+						<div id="team-table-scroll" class="agenda-table-scroll" role="region" aria-label="Lista de profissionais" tabindex="0">
+							<table class="agenda-table team-table">
+								<caption>Profissionais e atendimentos demonstrativos nos próximos sete dias</caption>
+								<thead><tr><th scope="col">Profissional</th><th scope="col">Área de atuação</th><th scope="col">Próximos atendimentos</th><th scope="col">Ações</th></tr></thead>
+								<tbody id="team-list"></tbody>
+							</table>
+						</div>
+						<p id="team-empty" hidden>Nenhum profissional corresponde à busca e aos filtros.</p>
+					</div>
+					<section id="team-profile-view" class="team-profile-view" hidden aria-labelledby="team-profile-title">
+						<button id="team-list-back" class="student-list-back" type="button"><i class="bi bi-arrow-left" aria-hidden="true"></i> Voltar para equipe</button>
+						<h2 id="team-profile-title"></h2>
+						<p id="team-profile-area" class="team-profile-area"></p>
+						<h3>Próximos atendimentos</h3>
+						<div class="agenda-table-scroll" role="region" aria-label="Próximos atendimentos do profissional" tabindex="0">
+							<table class="agenda-table team-profile-table">
+								<thead><tr><th scope="col">Data</th><th scope="col">Horário</th><th scope="col">Aluno</th><th scope="col">Status</th><th scope="col">Ações</th></tr></thead>
+								<tbody id="team-profile-appointments"></tbody>
+							</table>
+						</div>
+						<p id="team-profile-empty" hidden>Nenhum atendimento programado para este período.</p>
+					</section>
+				</section>
 				<section id="students-view" class="students-view" hidden aria-labelledby="students-title">
 					<div id="student-list-view">
 						<div class="students-heading">
