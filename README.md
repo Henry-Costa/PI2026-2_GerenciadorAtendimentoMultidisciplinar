@@ -82,6 +82,8 @@ Cada incremento será validado e commitado localmente antes do próximo. O envio
 - Histórico de atendimentos
 - Organização das informações
 
+**Status:** concluído em modo demonstrativo. Os perfis usam dados fictícios em memória e não são persistidos.
+
 ### Cadastro de Alunos
 
 **Duração:** 2 dias

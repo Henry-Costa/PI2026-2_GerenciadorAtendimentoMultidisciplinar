@@ -859,6 +859,82 @@ input {
     font-weight: 600;
 }
 
+.students-view {
+    max-width: 1000px;
+    padding-top: 24px;
+}
+
+.students-view[hidden],
+.student-profile-view[hidden] {
+    display: none;
+}
+
+.students-heading h2,
+.student-profile-view h2 {
+    margin: 0 0 8px;
+    color: var(--teal-deep);
+    font-size: 22px;
+}
+
+.students-heading p {
+    margin: 0 0 24px;
+    color: var(--ink-soft);
+    font-size: 13px;
+}
+
+.students-table {
+    min-width: 700px;
+}
+
+.student-list-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 36px;
+    margin: 0 0 20px;
+    padding: 6px 10px;
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    background: #fff;
+    color: var(--teal-deep);
+    font: inherit;
+    cursor: pointer;
+}
+
+.student-profile-details {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px 28px;
+    max-width: 720px;
+    margin: 24px 0 32px;
+}
+
+.student-profile-details div {
+    display: grid;
+    gap: 5px;
+}
+
+.student-profile-details dt {
+    color: var(--ink-soft);
+    font-size: 12px;
+}
+
+.student-profile-details dd {
+    margin: 0;
+    overflow-wrap: anywhere;
+}
+
+.student-profile-view h3 {
+    margin: 0 0 12px;
+    color: var(--teal-deep);
+    font-size: 18px;
+}
+
+.student-list-back:focus-visible {
+    outline: 2px solid var(--teal);
+    outline-offset: 2px;
+}
+
 @media (max-width: 1000px) {
     .dashboard-metrics {
         grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -937,6 +1013,10 @@ input {
     .app-shell {
         grid-template-columns: minmax(0, 1fr);
         grid-template-rows: auto minmax(0, 1fr);
+    }
+
+    .student-profile-details {
+        grid-template-columns: minmax(0, 1fr);
     }
 
     .app-shell.sidebar-collapsed {

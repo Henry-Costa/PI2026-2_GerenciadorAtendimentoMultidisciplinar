@@ -19,6 +19,22 @@ const demoAppointments = [
     return { ...appointment, date };
 });
 
+const demoStudentProfiles = [
+    { name: "Alice Martins", birthDate: "2017-03-14", guardian: "Renata Martins", contact: "(11) 90000-0001", area: "Psicologia", history: [{ dayOffset: -21, time: "09:00", professional: "Marina Costa", area: "Psicologia", status: "confirmed" }] },
+    { name: "Theo Ferreira", birthDate: "2016-08-22", guardian: "Patrícia Ferreira", contact: "(11) 90000-0002", area: "Fonoaudiologia", history: [{ dayOffset: -14, time: "10:30", professional: "Camila Rocha", area: "Fonoaudiologia", status: "confirmed" }] },
+    { name: "Lara Mendes", birthDate: "2018-01-09", guardian: "Eduardo Mendes", contact: "(11) 90000-0003", area: "Psicologia", history: [{ dayOffset: -28, time: "14:00", professional: "Marina Costa", area: "Psicologia", status: "confirmed" }] },
+    { name: "Miguel Costa", birthDate: "2015-11-30", guardian: "Juliana Costa", contact: "(11) 90000-0004", area: "Terapia Ocupacional", history: [{ dayOffset: -35, time: "09:30", professional: "Paula Nunes", area: "Terapia Ocupacional", status: "confirmed" }] },
+    { name: "Sofia Ribeiro", birthDate: "2017-06-05", guardian: "Marcelo Ribeiro", contact: "(11) 90000-0005", area: "Fonoaudiologia", history: [{ dayOffset: -42, time: "15:00", professional: "Camila Rocha", area: "Fonoaudiologia", status: "confirmed" }] },
+    { name: "Bento Oliveira", birthDate: "2019-02-17", guardian: "Aline Oliveira", contact: "(11) 90000-0006", area: "Terapia Ocupacional", history: [{ dayOffset: -7, time: "11:00", professional: "Paula Nunes", area: "Terapia Ocupacional", status: "confirmed" }] }
+].map((student) => ({
+    ...student,
+    history: student.history.map((appointment) => {
+        const date = new Date(dashboardToday);
+        date.setDate(date.getDate() + appointment.dayOffset);
+        return { ...appointment, date };
+    })
+}));
+
 function getUpcomingAppointments(appointments, today, days = 7) {
     const periodEnd = new Date(today);
     periodEnd.setDate(periodEnd.getDate() + days);
@@ -129,6 +145,10 @@ const pageTitle = document.querySelector("#page-title");
 const sectionTitle = document.querySelector("#section-title");
 const sectionDescription = document.querySelector("#section-description");
 const dashboardView = document.querySelector("#dashboard-view");
+const studentsView = document.querySelector("#students-view");
+const studentsList = document.querySelector("#students-list");
+const studentListView = document.querySelector("#student-list-view");
+const studentProfileView = document.querySelector("#student-profile-view");
 const pagePlaceholder = document.querySelector("#page-placeholder");
 const agendaFilters = document.querySelector("#agenda-filters");
 const appointmentSearch = document.querySelector("#appointment-search");
@@ -151,8 +171,68 @@ function populateFilter(select, values) {
     });
 }
 
+function renderStudentList() {
+    const dateFormatter = new Intl.DateTimeFormat("pt-BR", { day: "2-digit", month: "2-digit", year: "numeric" });
+    studentsList.replaceChildren();
+    demoStudentProfiles.forEach((student) => {
+        const appointments = [
+            ...student.history,
+            ...demoAppointments.filter((appointment) => appointment.student === student.name)
+        ];
+        const row = document.createElement("tr");
+        [student.name, student.guardian, student.area, String(appointments.length)].forEach((value) => {
+            const cell = document.createElement("td");
+            cell.textContent = value;
+            row.append(cell);
+        });
+        const actionCell = document.createElement("td");
+        const profileButton = document.createElement("button");
+        profileButton.className = "student-consult-button";
+        profileButton.type = "button";
+        profileButton.textContent = "Ver perfil";
+        profileButton.setAttribute("aria-label", `Ver perfil de ${student.name}`);
+        profileButton.addEventListener("click", () => renderStudentProfile(student, dateFormatter));
+        actionCell.append(profileButton);
+        row.append(actionCell);
+        studentsList.append(row);
+    });
+}
+
+function renderStudentProfile(student, dateFormatter) {
+    document.querySelector("#student-profile-title").textContent = student.name;
+    document.querySelector("#profile-birth-date").textContent = new Intl.DateTimeFormat("pt-BR", { dateStyle: "long", timeZone: "UTC" }).format(new Date(`${student.birthDate}T12:00:00Z`));
+    document.querySelector("#profile-guardian").textContent = student.guardian;
+    document.querySelector("#profile-contact").textContent = student.contact;
+    document.querySelector("#profile-area").textContent = student.area;
+
+    const appointments = [
+        ...student.history,
+        ...demoAppointments.filter((appointment) => appointment.student === student.name)
+    ].sort((first, second) => second.date - first.date || second.time.localeCompare(first.time));
+    const historyList = document.querySelector("#student-history-list");
+    historyList.replaceChildren();
+    appointments.forEach((appointment) => {
+        const row = document.createElement("tr");
+        const statusText = appointment.status === "pending" ? "Aguardando confirmação" : "Confirmado";
+        [dateFormatter.format(appointment.date), appointment.time, appointment.professional, appointment.area, statusText].forEach((value) => {
+            const cell = document.createElement("td");
+            cell.textContent = value;
+            row.append(cell);
+        });
+        historyList.append(row);
+    });
+    studentListView.hidden = true;
+    studentProfileView.hidden = false;
+}
+
 populateFilter(filterProfessional, demoAppointments.map((appointment) => appointment.professional));
 populateFilter(filterArea, demoAppointments.map((appointment) => appointment.area));
+renderStudentList();
+
+document.querySelector("#student-list-back").addEventListener("click", () => {
+    studentProfileView.hidden = true;
+    studentListView.hidden = false;
+});
 
 document.querySelector("#profile-name").textContent = currentProfile.name;
 document.querySelector("#profile-role").textContent = currentProfile.role;
@@ -296,7 +376,8 @@ function renderPage() {
     const page = pages[pageKey];
 
     dashboardView.hidden = pageKey !== "dashboard";
-    pagePlaceholder.hidden = pageKey === "dashboard";
+    studentsView.hidden = pageKey !== "alunos";
+    pagePlaceholder.hidden = pageKey === "dashboard" || pageKey === "alunos";
     pageTitle.textContent = page.title;
     sectionTitle.textContent = page.heading;
     sectionDescription.textContent = page.description;

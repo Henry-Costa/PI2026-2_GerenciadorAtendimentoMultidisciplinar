@@ -100,6 +100,37 @@
 					<p id="appointments-empty" hidden>Nenhum atendimento corresponde à busca e aos filtros.</p>
 				</section>
 			</section>
+				<section id="students-view" class="students-view" hidden aria-labelledby="students-title">
+					<div id="student-list-view">
+						<div class="students-heading">
+							<div><h2 id="students-title">Alunos cadastrados</h2><p>Registros fictícios para demonstração; os dados não são persistidos.</p></div>
+						</div>
+						<div class="agenda-table-scroll" role="region" aria-label="Lista de alunos" tabindex="0">
+							<table class="agenda-table students-table">
+								<caption>Dados de exemplo</caption>
+								<thead><tr><th scope="col">Aluno</th><th scope="col">Responsável</th><th scope="col">Área</th><th scope="col">Atendimentos</th><th scope="col">Ações</th></tr></thead>
+								<tbody id="students-list"></tbody>
+							</table>
+						</div>
+					</div>
+					<section id="student-profile-view" class="student-profile-view" hidden aria-labelledby="student-profile-title">
+						<button id="student-list-back" class="student-list-back" type="button"><i class="bi bi-arrow-left" aria-hidden="true"></i> Voltar para alunos</button>
+						<h2 id="student-profile-title"></h2>
+						<dl class="student-profile-details">
+							<div><dt>Data de nascimento</dt><dd id="profile-birth-date"></dd></div>
+							<div><dt>Responsável</dt><dd id="profile-guardian"></dd></div>
+							<div><dt>Contato</dt><dd id="profile-contact"></dd></div>
+							<div><dt>Área de acompanhamento</dt><dd id="profile-area"></dd></div>
+						</dl>
+						<h3>Histórico de atendimentos</h3>
+						<div class="agenda-table-scroll" role="region" aria-label="Histórico de atendimentos" tabindex="0">
+							<table class="agenda-table student-history-table">
+								<thead><tr><th scope="col">Data</th><th scope="col">Horário</th><th scope="col">Profissional</th><th scope="col">Área</th><th scope="col">Status</th></tr></thead>
+								<tbody id="student-history-list"></tbody>
+							</table>
+						</div>
+					</section>
+				</section>
 			<dialog id="student-dialog" class="student-dialog" aria-labelledby="student-dialog-title">
 				<div class="student-dialog-heading">
 					<h2 id="student-dialog-title">Consulta do aluno</h2>
