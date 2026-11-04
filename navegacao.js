@@ -185,6 +185,10 @@ const teamView = document.querySelector("#team-view");
 const communicationsView = document.querySelector("#communications-view");
 const studentsView = document.querySelector("#students-view");
 const reportsView = document.querySelector("#reports-view");
+const settingsView = document.querySelector("#settings-view");
+const settingsForm = document.querySelector("#settings-form");
+const settingsStartPage = document.querySelector("#settings-start-page");
+const settingsDensityInputs = document.querySelectorAll('input[name="settings-density"]');
 const studentsList = document.querySelector("#students-list");
 const studentListView = document.querySelector("#student-list-view");
 const studentProfileView = document.querySelector("#student-profile-view");
@@ -244,6 +248,43 @@ const studentDialog = document.querySelector("#student-dialog");
 const whatsappForm = document.querySelector("#whatsapp-form");
 const whatsappPhone = document.querySelector("#student-whatsapp");
 const whatsappLink = document.querySelector("#whatsapp-link");
+const preferenceStorageKey = "pi2026-2.preferences";
+
+function loadAppPreferences() {
+    const defaults = { startPage: "dashboard", density: "comfortable" };
+    try {
+        const savedPreferences = JSON.parse(localStorage.getItem(preferenceStorageKey) || "null");
+        return {
+            startPage: savedPreferences && pages[savedPreferences.startPage] ? savedPreferences.startPage : defaults.startPage,
+            density: savedPreferences?.density === "compact" ? "compact" : defaults.density
+        };
+    } catch {
+        return defaults;
+    }
+}
+
+const appPreferences = loadAppPreferences();
+settingsStartPage.value = appPreferences.startPage;
+settingsDensityInputs.forEach((input) => {
+    input.checked = input.value === appPreferences.density;
+});
+document.body.classList.toggle("compact-density", appPreferences.density === "compact");
+
+function saveAppPreferences() {
+    const nextPreferences = {
+        startPage: settingsStartPage.value,
+        density: settingsForm.querySelector('input[name="settings-density"]:checked')?.value || "comfortable"
+    };
+    Object.assign(appPreferences, nextPreferences);
+    document.body.classList.toggle("compact-density", appPreferences.density === "compact");
+    try {
+        localStorage.setItem(preferenceStorageKey, JSON.stringify(appPreferences));
+        document.querySelector("#settings-feedback").textContent = "Preferências salvas neste navegador.";
+    } catch {
+        document.querySelector("#settings-feedback").textContent = "Preferências aplicadas nesta sessão, mas não puderam ser salvas no navegador.";
+    }
+}
+
 let selectedAppointment;
 let selectedStudentPhotoUrl = "";
 let currentReportAppointments = [];
@@ -949,6 +990,17 @@ renderAgendaDayStrip();
 renderAgendaView();
 renderCommunications();
 renderReports();
+settingsForm.addEventListener("submit", (event) => {
+    event.preventDefault();
+    saveAppPreferences();
+});
+document.querySelector("#settings-reset").addEventListener("click", () => {
+    settingsStartPage.value = "dashboard";
+    settingsDensityInputs.forEach((input) => {
+        input.checked = input.value === "comfortable";
+    });
+    saveAppPreferences();
+});
 communicationPeriod.addEventListener("change", renderCommunications);
 communicationTemplate.addEventListener("change", renderCommunications);
 communicationSearch.addEventListener("input", renderCommunications);
@@ -1023,7 +1075,7 @@ sidebarToggle.addEventListener("click", () => {
 });
 
 function renderPage() {
-    const requestedPage = window.location.hash.slice(1);
+    const requestedPage = window.location.hash.slice(1) || appPreferences.startPage;
     const pageKey = pages[requestedPage] ? requestedPage : "dashboard";
     const page = pages[pageKey];
 
@@ -1034,7 +1086,8 @@ function renderPage() {
     communicationsView.hidden = pageKey !== "comunicacoes";
     studentsView.hidden = pageKey !== "alunos";
     reportsView.hidden = pageKey !== "relatorios";
-    pagePlaceholder.hidden = pageKey === "dashboard" || pageKey === "agenda" || pageKey === "atendimentos" || pageKey === "equipe" || pageKey === "comunicacoes" || pageKey === "alunos" || pageKey === "relatorios";
+    settingsView.hidden = pageKey !== "configuracoes";
+    pagePlaceholder.hidden = pageKey === "dashboard" || pageKey === "agenda" || pageKey === "atendimentos" || pageKey === "equipe" || pageKey === "comunicacoes" || pageKey === "alunos" || pageKey === "relatorios" || pageKey === "configuracoes";
     pageTitle.textContent = page.title;
     sectionTitle.textContent = page.heading;
     sectionDescription.textContent = page.description;

@@ -1132,6 +1132,123 @@ input {
     padding-top: 24px;
 }
 
+.settings-view {
+    max-width: 760px;
+    padding-top: 24px;
+}
+
+.settings-view[hidden] {
+    display: none;
+}
+
+.settings-page-header h2 {
+    margin: 0 0 8px;
+    color: var(--teal-deep);
+    font-size: 22px;
+}
+
+.settings-page-header p,
+.settings-note {
+    color: var(--ink-soft);
+    font-size: 13px;
+}
+
+.settings-page-header p {
+    margin: 0 0 24px;
+}
+
+.settings-form {
+    display: grid;
+    gap: 20px;
+}
+
+.settings-form > label {
+    display: grid;
+    max-width: 420px;
+    gap: 7px;
+    color: var(--ink-soft);
+    font-size: 13px;
+}
+
+.settings-form select {
+    width: 100%;
+    height: 42px;
+    padding: 0 10px;
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    background: #f8fcfc;
+    color: var(--ink);
+    font: inherit;
+}
+
+.settings-density {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px 24px;
+    margin: 0;
+    padding: 16px 0;
+    border: 0;
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+}
+
+.settings-density legend {
+    padding: 0 10px 0 0;
+    color: var(--ink);
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.settings-density label {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--ink);
+    font-size: 13px;
+}
+
+.settings-density input {
+    width: 16px;
+    height: 16px;
+    accent-color: var(--teal-deep);
+}
+
+.settings-note {
+    margin: 0;
+    line-height: 1.5;
+}
+
+.settings-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.settings-feedback {
+    min-height: 20px;
+    margin: 14px 0 0;
+    color: #286148;
+    font-size: 13px;
+}
+
+.settings-form :focus-visible {
+    outline: 2px solid var(--teal);
+    outline-offset: 2px;
+}
+
+.compact-density .agenda-table th,
+.compact-density .agenda-table td {
+    padding: 8px 10px;
+}
+
+.compact-density .dashboard-metrics div {
+    padding: 12px;
+}
+
+.compact-density .agenda-day-option {
+    min-height: 68px;
+}
+
 .communications-view[hidden] {
     display: none;
 }
@@ -1740,6 +1857,11 @@ input {
     .team-notice-comment-label,
     .team-notice-privacy-note {
         grid-column: auto;
+    }
+
+    .settings-actions {
+        align-items: flex-start;
+        flex-direction: column;
     }
 
     .app-shell.sidebar-collapsed {

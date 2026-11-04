@@ -341,6 +341,36 @@
 						</div>
 					</section>
 				</section>
+				<section id="settings-view" class="settings-view" hidden aria-labelledby="settings-title">
+					<header class="settings-page-header">
+						<h2 id="settings-title">Preferências desta instalação</h2>
+						<p>Estas opções são salvas apenas neste navegador.</p>
+					</header>
+					<form id="settings-form" class="settings-form">
+						<label for="settings-start-page">Tela inicial
+							<select id="settings-start-page">
+								<option value="dashboard">Dashboard</option>
+								<option value="agenda">Agenda</option>
+								<option value="atendimentos">Atendimentos</option>
+								<option value="alunos">Alunos</option>
+								<option value="equipe">Equipe</option>
+								<option value="comunicacoes">Comunicações</option>
+								<option value="relatorios">Relatórios</option>
+							</select>
+						</label>
+						<fieldset class="settings-density">
+							<legend>Densidade das tabelas</legend>
+							<label><input type="radio" name="settings-density" value="comfortable"> Padrão</label>
+							<label><input type="radio" name="settings-density" value="compact"> Compacta</label>
+						</fieldset>
+						<p class="settings-note">Preferências locais; não são sincronizadas com outros dispositivos ou contas.</p>
+						<div class="settings-actions">
+							<button class="new-student-button" type="submit"><i class="bi bi-check-lg" aria-hidden="true"></i> Salvar preferências</button>
+							<button id="settings-reset" class="student-list-back" type="button">Restaurar padrão</button>
+						</div>
+					</form>
+					<p id="settings-feedback" class="settings-feedback" role="status" aria-live="polite"></p>
+				</section>
 				<dialog id="student-registration-dialog" class="student-dialog" aria-labelledby="student-registration-title">
 					<div class="student-dialog-heading">
 						<h2 id="student-registration-title">Cadastro de aluno</h2>
