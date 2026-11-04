@@ -189,6 +189,7 @@ const settingsView = document.querySelector("#settings-view");
 const settingsForm = document.querySelector("#settings-form");
 const settingsStartPage = document.querySelector("#settings-start-page");
 const settingsDensityInputs = document.querySelectorAll('input[name="settings-density"]');
+const settingsDarkTheme = document.querySelector("#settings-dark-theme");
 const studentsList = document.querySelector("#students-list");
 const studentListView = document.querySelector("#student-list-view");
 const studentProfileView = document.querySelector("#student-profile-view");
@@ -251,12 +252,13 @@ const whatsappLink = document.querySelector("#whatsapp-link");
 const preferenceStorageKey = "pi2026-2.preferences";
 
 function loadAppPreferences() {
-    const defaults = { startPage: "dashboard", density: "comfortable" };
+    const defaults = { startPage: "dashboard", density: "comfortable", theme: "light" };
     try {
         const savedPreferences = JSON.parse(localStorage.getItem(preferenceStorageKey) || "null");
         return {
             startPage: savedPreferences && pages[savedPreferences.startPage] ? savedPreferences.startPage : defaults.startPage,
-            density: savedPreferences?.density === "compact" ? "compact" : defaults.density
+            density: savedPreferences?.density === "compact" ? "compact" : defaults.density,
+            theme: savedPreferences?.theme === "dark" ? "dark" : defaults.theme
         };
     } catch {
         return defaults;
@@ -268,15 +270,19 @@ settingsStartPage.value = appPreferences.startPage;
 settingsDensityInputs.forEach((input) => {
     input.checked = input.value === appPreferences.density;
 });
+settingsDarkTheme.checked = appPreferences.theme === "dark";
 document.body.classList.toggle("compact-density", appPreferences.density === "compact");
+document.body.classList.toggle("dark-theme", appPreferences.theme === "dark");
 
 function saveAppPreferences() {
     const nextPreferences = {
         startPage: settingsStartPage.value,
-        density: settingsForm.querySelector('input[name="settings-density"]:checked')?.value || "comfortable"
+        density: settingsForm.querySelector('input[name="settings-density"]:checked')?.value || "comfortable",
+        theme: settingsDarkTheme.checked ? "dark" : "light"
     };
     Object.assign(appPreferences, nextPreferences);
     document.body.classList.toggle("compact-density", appPreferences.density === "compact");
+    document.body.classList.toggle("dark-theme", appPreferences.theme === "dark");
     try {
         localStorage.setItem(preferenceStorageKey, JSON.stringify(appPreferences));
         document.querySelector("#settings-feedback").textContent = "Preferências salvas neste navegador.";
@@ -996,6 +1002,7 @@ settingsForm.addEventListener("submit", (event) => {
 });
 document.querySelector("#settings-reset").addEventListener("click", () => {
     settingsStartPage.value = "dashboard";
+    settingsDarkTheme.checked = false;
     settingsDensityInputs.forEach((input) => {
         input.checked = input.value === "comfortable";
     });

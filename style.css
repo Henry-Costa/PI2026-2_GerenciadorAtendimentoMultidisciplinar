@@ -1957,3 +1957,132 @@ input {
         transition-duration: 0.01ms !important;
     }
 }
+
+.app-body.dark-theme {
+    color-scheme: dark;
+    --ink: #F8FAFC;
+    --ink-soft: #94A3B8;
+    --teal: #0078D4;
+    --teal-deep: #0078D4;
+    --paper: #1E293B;
+    --line: #334155;
+    background: #0F172A;
+    color: #F8FAFC;
+}
+
+.dark-theme h1,
+.dark-theme h2,
+.dark-theme h3 {
+    color: #F8FAFC;
+}
+
+.dark-theme .app-sidebar {
+    background: #06080D;
+}
+
+.dark-theme .app-header {
+    border-color: #334155;
+}
+
+.dark-theme .sidebar-brand-kicker,
+.dark-theme .sidebar-brand,
+.dark-theme .sidebar-brand strong,
+.dark-theme .navigation-link,
+.dark-theme .logout-link {
+    color: #F8FAFC;
+}
+
+.dark-theme .navigation-label {
+    color: #94A3B8;
+}
+
+.dark-theme .navigation-link:hover,
+.dark-theme .navigation-link:focus-visible,
+.dark-theme .navigation-link[aria-current="page"],
+.dark-theme .sidebar-toggle:hover,
+.dark-theme .sidebar-toggle:focus-visible,
+.dark-theme .agenda-day-option.is-selected {
+    background: #1E40AF;
+    color: #F8FAFC;
+}
+
+.dark-theme .sidebar-toggle,
+.dark-theme .agenda-day-option,
+.dark-theme .agenda-reset,
+.dark-theme .student-consult-button,
+.dark-theme .student-list-back,
+.dark-theme .student-dialog-close,
+.dark-theme .team-notice-delete,
+.dark-theme .communication-whatsapp-link {
+    border-color: #334155;
+    background: #1E293B;
+    color: #F8FAFC;
+}
+
+.dark-theme .dashboard-metrics div,
+.dark-theme .agenda-filters input,
+.dark-theme .agenda-filters select,
+.dark-theme .communication-controls select,
+.dark-theme .settings-form select,
+.dark-theme .team-notice-form select,
+.dark-theme .team-notice-form textarea,
+.dark-theme .team-notice-search input,
+.dark-theme .student-registration-form input:not([type="file"]),
+.dark-theme .student-registration-form select,
+.dark-theme .whatsapp-form input,
+.dark-theme .student-dialog {
+    border-color: #334155;
+    background: #1E293B;
+    color: #F8FAFC;
+}
+
+.dark-theme .agenda-table th {
+    background: #1E293B;
+    color: #F8FAFC;
+}
+
+.dark-theme .area-chart-track {
+    background: #334155;
+}
+
+.dark-theme .student-profile-photo,
+.dark-theme .student-photo-preview {
+    border-color: #334155;
+}
+
+.dark-theme .agenda-status-pending {
+    background: #4a351c;
+    color: #f5cd91;
+}
+
+.dark-theme .agenda-status-confirmed {
+    background: #193b2b;
+    color: #9de0b8;
+}
+
+.dark-theme #metric-pending {
+    color: #f5cd91;
+}
+
+.dark-theme #metric-confirmed,
+.dark-theme .team-notice-feedback:not(:empty),
+.dark-theme .settings-feedback {
+    color: #9de0b8;
+}
+
+.dark-theme .new-student-button:hover,
+.dark-theme .report-export-button:hover,
+.dark-theme .student-consult-button:hover,
+.dark-theme .student-list-back:hover,
+.dark-theme .agenda-reset:hover,
+.dark-theme .communication-whatsapp-link:hover {
+    border-color: #1E40AF;
+    background: #1E40AF;
+    color: #F8FAFC;
+}
+
+.dark-theme .team-notice-delete:hover {
+    border-color: #f87171;
+    background: #1E293B;
+    color: #fca5a5;
+}
