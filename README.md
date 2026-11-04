@@ -72,7 +72,7 @@ O botão **Acessar**, no canto superior direito, abre o painel para demonstraç�
 - Incremento 3: busca e filtros da agenda (implementado).
 - Incremento 4: consulta dos dados do atendimento em diálogo e preparação de mensagem de confirmação pelo WhatsApp (implementado). O telefone é informado no momento, não é salvo e a mensagem só é aberta no WhatsApp após ação explícita; o envio não é automático.
 
-Cada incremento será validado e commitado localmente antes do próximo. O envio ao GitHub fica para depois da revisão final.
+Cada entrega é validada e registrada em commit separado. O frontend continua demonstrativo, sem autenticação ou banco conectado.
 
 ### Perfil do Aluno
 
@@ -102,6 +102,8 @@ Cada incremento será validado e commitado localmente antes do próximo. O envio
 - Adequação para diferentes resoluções
 - Padronização da interface
 
+**Status:** concluída e verificada em desktop e viewport móvel de 390 px.
+
 ### Testes e Refinamentos
 
 **Duração:** 1 dia
@@ -109,3 +111,5 @@ Cada incremento será validado e commitado localmente antes do próximo. O envio
 - Correção de bugs
 - Revisão da experiência do usuário
 - Ajustes finais
+
+**Status:** validação manual concluída nos fluxos de agenda, WhatsApp, perfil e cadastro; não há suíte automatizada no projeto.
