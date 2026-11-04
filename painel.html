@@ -104,6 +104,39 @@
 					<p id="appointments-empty" hidden>Nenhum atendimento corresponde à busca e aos filtros.</p>
 				</section>
 			</section>
+				<section id="appointments-view" class="appointments-view" hidden aria-labelledby="appointments-page-title">
+					<header class="appointments-page-header">
+						<div><h2 id="appointments-page-title">Atendimentos registrados</h2><p>Consulte e filtre os atendimentos demonstrativos.</p></div>
+					</header>
+					<form id="appointments-page-filters" class="agenda-filters" aria-label="Busca e filtros de atendimentos">
+						<label class="agenda-search">Buscar aluno, profissional ou área
+							<input id="appointments-page-search" type="search" placeholder="Nome ou área de atendimento" autocomplete="off">
+						</label>
+						<label>Período
+							<select id="appointments-page-period"><option value="7">Próximos 7 dias</option><option value="1">Hoje</option></select>
+						</label>
+						<label>Profissional
+							<select id="appointments-page-professional"><option value="">Todos</option></select>
+						</label>
+						<label>Área
+							<select id="appointments-page-area"><option value="">Todas</option></select>
+						</label>
+						<label>Status
+							<select id="appointments-page-status"><option value="">Todos</option><option value="pending">Aguardando confirmação</option><option value="confirmed">Confirmado</option></select>
+						</label>
+						<button class="agenda-reset" type="reset" title="Limpar busca e filtros" aria-label="Limpar busca e filtros"><i class="bi bi-arrow-counterclockwise" aria-hidden="true"></i></button>
+					</form>
+					<p id="appointments-page-period-label" class="agenda-period"></p>
+					<p id="appointments-page-results" class="agenda-results" role="status" aria-live="polite"></p>
+					<div id="appointments-page-table-scroll" class="agenda-table-scroll" role="region" aria-label="Lista de atendimentos" tabindex="0">
+						<table class="agenda-table">
+							<caption>Atendimentos fictícios para demonstração</caption>
+							<thead><tr><th scope="col">Data</th><th scope="col">Horário</th><th scope="col">Aluno</th><th scope="col">Profissional</th><th scope="col">Área</th><th scope="col">Status</th><th scope="col">Ações</th></tr></thead>
+							<tbody id="appointments-page-list"></tbody>
+						</table>
+					</div>
+					<p id="appointments-page-empty" hidden>Nenhum atendimento corresponde à busca e aos filtros.</p>
+				</section>
 				<section id="students-view" class="students-view" hidden aria-labelledby="students-title">
 					<div id="student-list-view">
 						<div class="students-heading">
