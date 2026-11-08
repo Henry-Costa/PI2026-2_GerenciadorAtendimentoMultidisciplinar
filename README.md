@@ -1,115 +1,56 @@
-# PI2026-2_GerenciadorAtendimentoMultidisciplinar
+# Gerenciador de Atendimento Multidisciplinar
 
-Frontend em desenvolvimento para o sistema de gerenciamento de atendimentos multidisciplinares do Espaço Bianca Petenão.
+Projeto Integrador do Espaço Bianca Petenão para apoio ao gerenciamento de alunos, profissionais e atendimentos multidisciplinares.
 
-## Tecnologias
+## Estrutura atual
 
-- HTML
-- CSS
-- JavaScript
+```text
+frontend/                         Interface estática em HTML, CSS e JavaScript
+  README.md                       Documentação específica da interface
+backend/                          Estrutura inicial da API em TypeScript
+  supabase/
+    migrations/                   Esquema PostgreSQL versionado
+    validation/                   Consultas somente de leitura para validação
+  docs/modelagem-banco.md         Modelos conceitual, lógico e físico
+```
 
-O projeto usa HTML, CSS e JavaScript sem frameworks. Os ícones Bootstrap Icons são carregados por CDN (Content Delivery Network) e precisam de conexão com a internet.
+## Status do projeto
 
-## Etapa atual
+- O frontend é demonstrativo e utiliza dados fictícios em memória.
+- A estrutura inicial do backend está presente, mas ainda não possui dependências, variáveis de ambiente ou execução configuradas nesta branch.
+- O banco PostgreSQL no Supabase possui uma migration inicial com 15 tabelas, RLS, políticas de acesso, auditoria e bucket privado para documentos.
+- A integração entre frontend, API, autenticação e banco ainda não foi incluída nesta branch.
 
-Dashboard, atendimentos, agenda, equipe, comunicações, relatórios e configurações concluídos em modo demonstrativo. A tela de atendimentos permite consultar os registros, buscar por aluno, profissional ou área e filtrar por período, profissional, área e status. A Agenda oferece visão diária da semana demonstrativa, com seleção de data, horários ordenados e filtros. A Equipe lista profissionais e áreas derivadas dos atendimentos, com a agenda individual dos próximos sete dias. Comunicações prepara lembretes e confirmações para abertura manual no WhatsApp usando contatos fictícios, sem envio automático ou histórico. Bianca também pode publicar comentários vinculados a um aluno e direcionados a um profissional ou à equipe, buscar avisos por texto ou contexto e apagá-los; eles existem apenas na sessão local e não são sincronizados. Configurações salvam neste navegador a tela inicial, a densidade das tabelas e o tema claro/escuro. O tema escuro usa fundo `#0F172A`, sidebar `#06080D`, superfícies `#1E293B`, texto principal `#F8FAFC`, texto secundário `#94A3B8`, destaque `#0078D4`, hover `#1E40AF` e bordas `#334155`. O Dashboard contém perfil, saudação conforme `currentProfile`, data local, quatro KPIs calculados e gráfico de atendimentos por área nos próximos sete dias. Relatórios permitem filtrar hoje ou próximos sete dias, comparar resultados por área e profissional e exportar CSV. Os dados são fictícios; não há autenticação ou banco conectado.
+## Pré-requisitos
 
-A agenda permite buscar aluno, profissional ou área sem distinção de acentos, combinar filtros de profissional, área e status, escolher entre hoje e os próximos sete dias e limpar todos os controles. A contagem de resultados acompanha a tabela; os KPIs mantêm o resumo dos próximos sete dias, independentemente dos filtros.
+- Navegador atualizado para abrir o frontend.
+- Projeto criado no [Supabase](https://supabase.com/) para aplicar e validar o banco.
 
-O botão **Acessar**, no canto superior direito, abre o painel para demonstração. O botão **Entrar** exige e-mail e senha preenchidos; o e-mail mostra avisos em português para campo vazio ou formato inválido. A autenticação ainda não está conectada. No desktop, o menu recolhido vira uma rail de ícones; no celular, inicia fechado com um ícone de casa e abre a navegação em coluna.
+Não há dependências Node.js configuradas nesta branch. Portanto, não é necessário executar `npm install` para usar o frontend ou aplicar a modelagem no Supabase.
 
-## Estrutura
+## Como abrir o frontend
 
-- `index.html`: estrutura principal da página
-- `painel.html`: painel com sidebar e navegação entre áreas
-- `style.css`: estilos do projeto
-- `script.js`: interações do projeto
-- `navegacao.js`: dados dos links e símbolos do menu, além da navegação entre as seções
+O frontend é estático. Abra a pasta `frontend` em um servidor HTTP local, como a extensão Live Server do VS Code, e acesse `index.html`.
 
-## Cronograma do frontend
+Não existe processo de build, container Docker ou conexão com a API configurados nesta etapa.
 
-### Estrutura Inicial do Projeto
+Consulte [frontend/README.md](frontend/README.md) para detalhes sobre as telas e recursos demonstrativos.
 
-**Duração:** 1 dia
+## Como configurar o banco no Supabase
 
-- Organização de pastas
-- Configuração dos arquivos HTML, CSS e JavaScript
+1. Crie ou acesse o projeto no Supabase.
+2. Abra **SQL Editor** no painel do projeto.
+3. Execute o conteúdo de [backend/supabase/migrations/20261105000000_initial_schema.sql](backend/supabase/migrations/20261105000000_initial_schema.sql).
+4. Em seguida, execute [backend/supabase/validation/20261105_validate_initial_schema.sql](backend/supabase/validation/20261105_validate_initial_schema.sql).
 
-**Status:** concluída
+O script de validação apenas consulta o banco: ele confirma tabelas, RLS, políticas, funções, permissões e o bucket privado. Nenhum dado é inserido, alterado ou excluído.
 
-### Tela de Login
+Para a explicação das entidades, relacionamentos e decisões de LGPD, consulte [backend/docs/modelagem-banco.md](backend/docs/modelagem-banco.md).
 
-**Duração:** 2 dias
+## Segurança
 
-- Desenvolvimento da interface
-- Validações e interações
-- Responsividade
+Chaves, arquivos `.env` e dados reais não devem ser enviados ao repositório. A migration usa RLS para restringir acesso a dados pessoais, financeiros e clínicos.
 
-**Status:** concluída
+## Fluxo de colaboração
 
-### Navegação e Sidebar
-
-**Duração:** 1 dia
-
-- Menu lateral
-- Estrutura de navegação entre páginas
-
-**Status:** concluída
-
-### Dashboard Administrativo
-
-**Duração:** 3 dias
-
-- Cards de indicadores
-- Listagem de atendimentos
-- Gráficos e métricas
-- Layout do painel principal
-
-**Status:** concluído em modo demonstrativo
-
-- Incremento 1: perfil, boas-vindas, data e KPIs de demonstração.
-- Incremento 2: agenda com dados fictícios e contagens calculadas (implementado).
-- Incremento 3: busca e filtros da agenda (implementado).
-- Incremento 4: consulta dos dados do atendimento em diálogo e preparação de mensagem de confirmação pelo WhatsApp (implementado). O telefone é informado no momento, não é salvo e a mensagem só é aberta no WhatsApp após ação explícita; o envio não é automático.
-
-Cada entrega é validada e registrada em commit separado. O frontend continua demonstrativo, sem autenticação ou banco conectado.
-
-### Perfil do Aluno
-
-**Duração:** 2 dias
-
-- Exibição de dados cadastrais
-- Histórico de atendimentos
-- Organização das informações
-
-**Status:** concluído em modo demonstrativo. Os perfis usam dados fictícios em memória e não são persistidos.
-
-### Cadastro de Alunos
-
-**Duração:** 2 dias
-
-- Formulários
-- Máscaras de campos
-- Upload de imagem
-- Validações
-
-**Status:** concluído em modo demonstrativo. Os cadastros ficam apenas em memória e não persistem após recarregar a página.
-
-### Responsividade e Ajustes Visuais
-
-**Duração:** 1 dia
-
-- Adequação para diferentes resoluções
-- Padronização da interface
-
-**Status:** concluída e verificada em desktop e viewport móvel de 390 px.
-
-### Testes e Refinamentos
-
-**Duração:** 1 dia
-
-- Correção de bugs
-- Revisão da experiência do usuário
-- Ajustes finais
-
-**Status:** validação manual concluída nos fluxos de agenda, WhatsApp, perfil e cadastro; não há suíte automatizada no projeto.
+Desenvolva em branches de funcionalidade, abra PR para `dev` e faça revisão/teste antes de atualizar `main`.

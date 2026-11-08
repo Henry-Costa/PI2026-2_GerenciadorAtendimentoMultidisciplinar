@@ -1,0 +1,15 @@
+# Local environment files and Supabase CLI secrets
+node_modules/
+.env
+.env.*
+!.env.example
+backend/.env
+backend/.env.local
+frontend/.env
+frontend/.env.local
+backend/node_modules/
+backend/dist/
+
+# Supabase local development runtime
+supabase/.temp/
+backend/supabase/.temp/
