@@ -1,115 +1,33 @@
-# PI2026-2_GerenciadorAtendimentoMultidisciplinar
+# Frontend do Espaço Bianca Petenão
 
-Frontend em desenvolvimento para o sistema de gerenciamento de atendimentos multidisciplinares do Espaço Bianca Petenão.
+Interface do PI ADS em HTML, CSS e JavaScript. Abra pelo Live Server do VS Code ou sirva a pasta `frontend` com um servidor HTTP local. Por exemplo, na raiz do projeto:
 
-## Tecnologias
+```sh
+python -m http.server 5500 --bind 127.0.0.1 --directory frontend
+```
 
-- HTML
-- CSS
-- JavaScript
+Acesse http://127.0.0.1:5500. A interface usa módulos nativos do navegador e dispensa instalação ou build.
 
-O projeto usa HTML, CSS e JavaScript sem frameworks. Os ícones Bootstrap Icons são carregados por CDN (Content Delivery Network) e precisam de conexão com a internet.
+## Testar a interface
 
-## Etapa atual
+- **Admin** pode criar e editar funcionários, tipos de atendimento, pacientes e consultas. Também pode ver relatórios e exportar CSV.
+- **Profissional** vê apenas a própria agenda e pode registrar check-in ou ausência conforme os horários da demonstração. Cancelamento e edição de consultas ficam com o admin.
+- O seletor no painel troca o perfil na mesma página, preservando os dados de teste em memória para comparar os fluxos. Recarregar ou sair volta aos exemplos iniciais.
+- No cadastro de paciente, escolha o tipo de atendimento para carregar os profissionais compatíveis. O preço do tipo sugere o valor do vínculo, que sugere o valor da consulta.
+- Na Agenda, selecione um dia no calendário semanal ou use a lista por período. O admin cria consultas únicas ou semanais (2 a 52 ocorrências, incluindo a primeira).
+- Uma sessão dupla ocupa dois períodos consecutivos do atendimento e sugere o dobro do valor do vínculo. O admin pode ajustar o valor por consulta. O término é calculado automaticamente.
+- O mesmo profissional ou paciente pode começar outra consulta no instante em que a anterior termina. A agenda verifica todas as ocorrências antes de salvar uma série. Editar ou cancelar afeta somente a ocorrência selecionada.
+- Para executar os testes das regras de agenda com Node.js 24, rode `node --test frontend/tests/agenda.test.mjs` na raiz do projeto.
+- Na demonstração, check-in abre 30 minutos antes e encerra 24 horas após a sessão. Ausência abre após o fim do agendamento e segue o mesmo limite. Essas janelas foram adotadas para testar a interface.
+- O destinatário do lembrete fica gravado no cadastro da sessão de teste. A interface não envia mensagens.
 
-Dashboard, atendimentos, agenda, equipe, comunicações, relatórios e configurações concluídos em modo demonstrativo. A tela de atendimentos permite consultar os registros, buscar por aluno, profissional ou área e filtrar por período, profissional, área e status. A Agenda oferece visão diária da semana demonstrativa, com seleção de data, horários ordenados e filtros. A Equipe lista profissionais e áreas derivadas dos atendimentos, com a agenda individual dos próximos sete dias. Comunicações prepara lembretes e confirmações para abertura manual no WhatsApp usando contatos fictícios, sem envio automático ou histórico. Bianca também pode publicar comentários vinculados a um aluno e direcionados a um profissional ou à equipe, buscar avisos por texto ou contexto e apagá-los; eles existem apenas na sessão local e não são sincronizados. Configurações salvam neste navegador a tela inicial, a densidade das tabelas e o tema claro/escuro. O tema escuro usa fundo `#0F172A`, sidebar `#06080D`, superfícies `#1E293B`, texto principal `#F8FAFC`, texto secundário `#94A3B8`, destaque `#0078D4`, hover `#1E40AF` e bordas `#334155`. O Dashboard contém perfil, saudação conforme `currentProfile`, data local, quatro KPIs calculados e gráfico de atendimentos por área nos próximos sete dias. Relatórios permitem filtrar hoje ou próximos sete dias, comparar resultados por área e profissional e exportar CSV. Os dados são fictícios; não há autenticação ou banco conectado.
+**Use dados fictícios.** A seleção de perfis simula a experiência de cada papel. Ela não é autenticação ou controle de acesso em produção. Esta versão não chama a API ou o Supabase. Login real, autorização e persistência dependem de contratos seguros no backend existente e estão fora do escopo da refatoração.
 
-A agenda permite buscar aluno, profissional ou área sem distinção de acentos, combinar filtros de profissional, área e status, escolher entre hoje e os próximos sete dias e limpar todos os controles. A contagem de resultados acompanha a tabela; os KPIs mantêm o resumo dos próximos sete dias, independentemente dos filtros.
+## Organização
 
-O botão **Acessar**, no canto superior direito, abre o painel para demonstração. O botão **Entrar** exige e-mail e senha preenchidos; o e-mail mostra avisos em português para campo vazio ou formato inválido. A autenticação ainda não está conectada. No desktop, o menu recolhido vira uma rail de ícones; no celular, inicia fechado com um ícone de casa e abre a navegação em coluna.
-
-## Estrutura
-
-- `index.html`: estrutura principal da página
-- `painel.html`: painel com sidebar e navegação entre áreas
-- `style.css`: estilos do projeto
-- `script.js`: interações do projeto
-- `navegacao.js`: dados dos links e símbolos do menu, além da navegação entre as seções
-
-## Cronograma do frontend
-
-### Estrutura Inicial do Projeto
-
-**Duração:** 1 dia
-
-- Organização de pastas
-- Configuração dos arquivos HTML, CSS e JavaScript
-
-**Status:** concluída
-
-### Tela de Login
-
-**Duração:** 2 dias
-
-- Desenvolvimento da interface
-- Validações e interações
-- Responsividade
-
-**Status:** concluída
-
-### Navegação e Sidebar
-
-**Duração:** 1 dia
-
-- Menu lateral
-- Estrutura de navegação entre páginas
-
-**Status:** concluída
-
-### Dashboard Administrativo
-
-**Duração:** 3 dias
-
-- Cards de indicadores
-- Listagem de atendimentos
-- Gráficos e métricas
-- Layout do painel principal
-
-**Status:** concluído em modo demonstrativo
-
-- Incremento 1: perfil, boas-vindas, data e KPIs de demonstração.
-- Incremento 2: agenda com dados fictícios e contagens calculadas (implementado).
-- Incremento 3: busca e filtros da agenda (implementado).
-- Incremento 4: consulta dos dados do atendimento em diálogo e preparação de mensagem de confirmação pelo WhatsApp (implementado). O telefone é informado no momento, não é salvo e a mensagem só é aberta no WhatsApp após ação explícita; o envio não é automático.
-
-Cada entrega é validada e registrada em commit separado. O frontend continua demonstrativo, sem autenticação ou banco conectado.
-
-### Perfil do Aluno
-
-**Duração:** 2 dias
-
-- Exibição de dados cadastrais
-- Histórico de atendimentos
-- Organização das informações
-
-**Status:** concluído em modo demonstrativo. Os perfis usam dados fictícios em memória e não são persistidos.
-
-### Cadastro de Alunos
-
-**Duração:** 2 dias
-
-- Formulários
-- Máscaras de campos
-- Upload de imagem
-- Validações
-
-**Status:** concluído em modo demonstrativo. Os cadastros ficam apenas em memória e não persistem após recarregar a página.
-
-### Responsividade e Ajustes Visuais
-
-**Duração:** 1 dia
-
-- Adequação para diferentes resoluções
-- Padronização da interface
-
-**Status:** concluída e verificada em desktop e viewport móvel de 390 px.
-
-### Testes e Refinamentos
-
-**Duração:** 1 dia
-
-- Correção de bugs
-- Revisão da experiência do usuário
-- Ajustes finais
-
-**Status:** validação manual concluída nos fluxos de agenda, WhatsApp, perfil e cadastro; não há suíte automatizada no projeto.
+- `index.html` e `painel.html` são os pontos de entrada.
+- `style.css` preserva a base visual. `src/app.css` contém os estilos das telas novas.
+- `src/app.js` organiza a navegação e a troca de perfis.
+- `src/features/` separa agenda, pacientes, equipe, tipos de atendimento e relatórios.
+- `src/data/demo.js` implementa os dados e as regras da demonstração, isolados das telas.
+- `src/shared/` reúne validações e elementos reutilizáveis.

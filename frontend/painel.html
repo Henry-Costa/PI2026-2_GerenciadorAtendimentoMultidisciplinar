@@ -1,429 +1,68 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pt-BR">
-<head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<meta name="theme-color" content="#dceef1">
-	<title>Painel | Espaço Bianca Petenão</title>
-	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-	<link rel="stylesheet" href="style.css">
-</head>
-<body class="app-body">
-	<div class="app-shell">
-		<aside class="app-sidebar" id="app-sidebar" aria-label="Navegação principal">
-			<a class="sidebar-brand" href="#dashboard">
-				<span class="sidebar-brand-kicker">ESPAÇO</span>
-				<strong>Bianca Petenão</strong>
-				<span class="sidebar-brand-compact" aria-hidden="true">BP</span>
-			</a>
-			<button class="sidebar-toggle" id="sidebar-toggle" type="button" aria-controls="app-sidebar" aria-expanded="true" aria-label="Recolher menu" title="Recolher menu">
-				<i class="sidebar-toggle-icon sidebar-toggle-desktop bi bi-chevron-left" aria-hidden="true"></i>
-				<i class="sidebar-toggle-icon sidebar-toggle-mobile bi bi-house" aria-hidden="true"></i>
-			</button>
-
-			<nav class="sidebar-navigation" aria-label="Seções do sistema">
-				<p class="navigation-label">Menu</p>
-				<ul class="navigation-list" id="navigation-list"></ul>
-			</nav>
-
-			<a class="logout-link" href="index.html" title="Voltar ao login"><i class="navigation-icon bi bi-box-arrow-left" aria-hidden="true"></i><span class="navigation-link-label">Voltar ao login</span></a>
-		</aside>
-
-		<main class="app-main">
-			<header class="app-header">
-				<div class="app-heading">
-					<p class="eyebrow">Espaço Bianca Petenão</p>
-					<h1 id="page-title">Dashboard</h1>
-				</div>
-				<div class="profile-summary" aria-label="Perfil atual">
-					<i class="bi bi-person-circle" aria-hidden="true"></i>
-					<div><strong id="profile-name"></strong><span id="profile-role"></span></div>
-				</div>
-			</header>
-			<section id="dashboard-view" class="dashboard-view" aria-label="Resumo do dashboard">
-				<p id="dashboard-date" class="dashboard-date"></p>
-				<h2 id="dashboard-greeting"></h2>
-				<p>Veja o resumo dos atendimentos do espaço.</p>
-				<dl class="dashboard-metrics">
-					<div><dt>Próximos 7 dias</dt><dd id="metric-upcoming"></dd></div>
-					<div><dt>Aguardando confirmação</dt><dd id="metric-pending"></dd></div>
-					<div><dt>Confirmados nos próximos 7 dias</dt><dd id="metric-confirmed"></dd></div>
-					<div><dt>Atendimentos hoje</dt><dd id="metric-today"></dd></div>
-				</dl>
-				<section class="dashboard-chart" aria-labelledby="area-chart-title">
-					<div class="dashboard-chart-heading"><h3 id="area-chart-title">Atendimentos por área</h3><span>Próximos 7 dias</span></div>
-					<div id="area-chart" class="area-chart" role="list" aria-label="Quantidade de atendimentos por área"></div>
-				</section>
-				<a class="report-link" href="#relatorios">Relatórios completos</a>
-				<section class="dashboard-agenda" aria-labelledby="appointments-title">
-					<h3 id="appointments-title">Agenda de atendimentos</h3>
-					<p class="agenda-period" id="agenda-period"></p>
-					<form id="agenda-filters" class="agenda-filters" aria-label="Busca e filtros da agenda">
-						<label class="agenda-search">Buscar aluno, profissional ou área
-							<input id="appointment-search" type="search" placeholder="Nome ou área de atendimento" autocomplete="off">
-						</label>
-						<label>Período
-							<select id="filter-period">
-								<option value="7">Próximos 7 dias</option>
-								<option value="1">Hoje</option>
-							</select>
-						</label>
-						<label>Profissional
-							<select id="filter-professional"><option value="">Todos</option></select>
-						</label>
-						<label>Área
-							<select id="filter-area"><option value="">Todas</option></select>
-						</label>
-						<label>Status
-							<select id="filter-status">
-								<option value="">Todos</option>
-								<option value="pending">Aguardando confirmação</option>
-								<option value="confirmed">Confirmado</option>
-							</select>
-						</label>
-						<button class="agenda-reset" type="reset" title="Limpar busca e filtros" aria-label="Limpar busca e filtros"><i class="bi bi-arrow-counterclockwise" aria-hidden="true"></i></button>
-					</form>
-					<p class="agenda-results" id="agenda-results" role="status" aria-live="polite"></p>
-					<div class="agenda-table-scroll" role="region" aria-label="Agenda de atendimentos" tabindex="0">
-						<table class="agenda-table">
-							<caption>Atendimentos fictícios para demonstração</caption>
-							<thead>
-								<tr>
-									<th scope="col">Data</th>
-									<th scope="col">Horário</th>
-									<th scope="col">Aluno</th>
-									<th scope="col">Profissional</th>
-									<th scope="col">Área</th>
-									<th scope="col">Status</th>
-									<th scope="col">Ações</th>
-								</tr>
-							</thead>
-							<tbody id="appointments-list"></tbody>
-						</table>
-					</div>
-					<p id="appointments-empty" hidden>Nenhum atendimento corresponde à busca e aos filtros.</p>
-				</section>
-			</section>
-				<section id="agenda-view" class="agenda-view" hidden aria-labelledby="agenda-page-title">
-					<header class="agenda-page-header">
-						<div><h2 id="agenda-page-title">Agenda semanal</h2><p id="agenda-week-range"></p></div>
-					</header>
-					<div id="agenda-day-strip" class="agenda-day-strip" role="group" aria-label="Selecionar dia da agenda"></div>
-					<form id="agenda-page-filters" class="agenda-filters" aria-label="Filtrar atendimentos do dia">
-						<label class="agenda-search">Buscar aluno, profissional ou área
-							<input id="agenda-page-search" type="search" placeholder="Nome ou área de atendimento" autocomplete="off">
-						</label>
-						<label>Profissional
-							<select id="agenda-page-professional"><option value="">Todos</option></select>
-						</label>
-						<label>Área
-							<select id="agenda-page-area"><option value="">Todas</option></select>
-						</label>
-						<label>Status
-							<select id="agenda-page-status"><option value="">Todos</option><option value="pending">Aguardando confirmação</option><option value="confirmed">Confirmado</option></select>
-						</label>
-						<button class="agenda-reset" type="reset" title="Limpar filtros" aria-label="Limpar filtros"><i class="bi bi-arrow-counterclockwise" aria-hidden="true"></i></button>
-					</form>
-					<p id="agenda-day-label" class="agenda-period"></p>
-					<p id="agenda-day-results" class="agenda-results" role="status" aria-live="polite"></p>
-					<div id="agenda-day-table-scroll" class="agenda-table-scroll" role="region" aria-label="Atendimentos do dia" tabindex="0">
-						<table class="agenda-table">
-							<caption>Horários e atendimentos do dia selecionado</caption>
-							<thead><tr><th scope="col">Horário</th><th scope="col">Aluno</th><th scope="col">Profissional</th><th scope="col">Área</th><th scope="col">Status</th><th scope="col">Ações</th></tr></thead>
-							<tbody id="agenda-day-list"></tbody>
-						</table>
-					</div>
-					<p id="agenda-day-empty" hidden>Nenhum atendimento para este dia e estes filtros.</p>
-					<p class="agenda-demo-note">Agenda demonstrativa com dados fictícios; alterações não são salvas.</p>
-				</section>
-				<section id="appointments-view" class="appointments-view" hidden aria-labelledby="appointments-page-title">
-					<header class="appointments-page-header">
-						<div><h2 id="appointments-page-title">Atendimentos registrados</h2><p>Consulte e filtre os atendimentos demonstrativos.</p></div>
-					</header>
-					<form id="appointments-page-filters" class="agenda-filters" aria-label="Busca e filtros de atendimentos">
-						<label class="agenda-search">Buscar aluno, profissional ou área
-							<input id="appointments-page-search" type="search" placeholder="Nome ou área de atendimento" autocomplete="off">
-						</label>
-						<label>Período
-							<select id="appointments-page-period"><option value="7">Próximos 7 dias</option><option value="1">Hoje</option></select>
-						</label>
-						<label>Profissional
-							<select id="appointments-page-professional"><option value="">Todos</option></select>
-						</label>
-						<label>Área
-							<select id="appointments-page-area"><option value="">Todas</option></select>
-						</label>
-						<label>Status
-							<select id="appointments-page-status"><option value="">Todos</option><option value="pending">Aguardando confirmação</option><option value="confirmed">Confirmado</option></select>
-						</label>
-						<button class="agenda-reset" type="reset" title="Limpar busca e filtros" aria-label="Limpar busca e filtros"><i class="bi bi-arrow-counterclockwise" aria-hidden="true"></i></button>
-					</form>
-					<p id="appointments-page-period-label" class="agenda-period"></p>
-					<p id="appointments-page-results" class="agenda-results" role="status" aria-live="polite"></p>
-					<div id="appointments-page-table-scroll" class="agenda-table-scroll" role="region" aria-label="Lista de atendimentos" tabindex="0">
-						<table class="agenda-table">
-							<caption>Atendimentos fictícios para demonstração</caption>
-							<thead><tr><th scope="col">Data</th><th scope="col">Horário</th><th scope="col">Aluno</th><th scope="col">Profissional</th><th scope="col">Área</th><th scope="col">Status</th><th scope="col">Ações</th></tr></thead>
-							<tbody id="appointments-page-list"></tbody>
-						</table>
-					</div>
-					<p id="appointments-page-empty" hidden>Nenhum atendimento corresponde à busca e aos filtros.</p>
-				</section>
-				<section id="team-view" class="team-view" hidden aria-labelledby="team-title">
-					<div id="team-list-view">
-						<header class="team-page-header">
-							<h2 id="team-title">Profissionais</h2>
-							<p>Equipe associada aos atendimentos demonstrativos.</p>
-						</header>
-						<form id="team-filters" class="agenda-filters" aria-label="Buscar e filtrar profissionais">
-							<label class="agenda-search">Buscar profissional ou área
-								<input id="team-search" type="search" placeholder="Nome ou área de atuação" autocomplete="off">
-							</label>
-							<label>Área
-								<select id="team-area-filter"><option value="">Todas</option></select>
-							</label>
-							<button class="agenda-reset" type="reset" title="Limpar filtros" aria-label="Limpar filtros"><i class="bi bi-arrow-counterclockwise" aria-hidden="true"></i></button>
-						</form>
-						<p id="team-results" class="agenda-results" role="status" aria-live="polite"></p>
-						<div id="team-table-scroll" class="agenda-table-scroll" role="region" aria-label="Lista de profissionais" tabindex="0">
-							<table class="agenda-table team-table">
-								<caption>Profissionais e atendimentos demonstrativos nos próximos sete dias</caption>
-								<thead><tr><th scope="col">Profissional</th><th scope="col">Área de atuação</th><th scope="col">Próximos atendimentos</th><th scope="col">Ações</th></tr></thead>
-								<tbody id="team-list"></tbody>
-							</table>
-						</div>
-						<p id="team-empty" hidden>Nenhum profissional corresponde à busca e aos filtros.</p>
-					</div>
-					<section id="team-profile-view" class="team-profile-view" hidden aria-labelledby="team-profile-title">
-						<button id="team-list-back" class="student-list-back" type="button"><i class="bi bi-arrow-left" aria-hidden="true"></i> Voltar para equipe</button>
-						<h2 id="team-profile-title"></h2>
-						<p id="team-profile-area" class="team-profile-area"></p>
-						<h3>Próximos atendimentos</h3>
-						<div class="agenda-table-scroll" role="region" aria-label="Próximos atendimentos do profissional" tabindex="0">
-							<table class="agenda-table team-profile-table">
-								<thead><tr><th scope="col">Data</th><th scope="col">Horário</th><th scope="col">Aluno</th><th scope="col">Status</th><th scope="col">Ações</th></tr></thead>
-								<tbody id="team-profile-appointments"></tbody>
-							</table>
-						</div>
-						<p id="team-profile-empty" hidden>Nenhum atendimento programado para este período.</p>
-					</section>
-				</section>
-				<section id="communications-view" class="communications-view" hidden aria-labelledby="communications-title">
-					<header class="communications-header">
-						<div><h2 id="communications-title">Painel de lembretes</h2><p>Prepare mensagens para os responsáveis e envie manualmente pelo WhatsApp.</p></div>
-						<div class="communication-controls">
-							<label>Mensagem
-								<select id="communication-template"><option value="confirmation">Confirmação de atendimento</option><option value="reminder">Lembrete de atendimento</option></select>
-							</label>
-							<label>Período
-								<select id="communication-period"><option value="7">Próximos 7 dias</option><option value="1">Hoje</option></select>
-							</label>
-						</div>
-					</header>
-					<p class="communication-demo-note">Contatos fictícios para demonstração. Nenhuma mensagem é enviada ou registrada automaticamente.</p>
-					<section class="team-notice-section" aria-labelledby="team-notice-title">
-						<header class="team-notice-header">
-							<div><h3 id="team-notice-title">Avisos da Bianca</h3><p>Compartilhe um comentário de acompanhamento com a equipe.</p></div>
-						</header>
-						<form id="team-notice-form" class="team-notice-form">
-							<label>Enviar para
-								<select id="team-notice-recipient" required><option value="all">Toda a equipe</option></select>
-							</label>
-							<label>Aluno ou responsável
-								<select id="team-notice-student" required><option value="">Selecione</option></select>
-							</label>
-							<label class="team-notice-comment-label">Comentário
-								<textarea id="team-notice-comment" rows="3" maxlength="500" placeholder="Escreva um aviso breve para a equipe" required></textarea>
-							</label>
-							<p class="team-notice-privacy-note">Demonstração local: não inclua informações clínicas ou sigilosas. O aviso não é enviado para outras contas e desaparece ao recarregar.</p>
-							<button class="new-student-button" type="submit"><i class="bi bi-send" aria-hidden="true"></i> Publicar aviso</button>
-						</form>
-						<p id="team-notice-feedback" class="team-notice-feedback" role="status" aria-live="polite"></p>
-						<label class="team-notice-search">Buscar aviso
-							<input id="team-notice-search" type="search" placeholder="Aluno, responsável, profissional ou comentário" autocomplete="off">
-						</label>
-						<p id="team-notice-results" class="team-notice-search-results" role="status" aria-live="polite"></p>
-						<div id="team-notice-list" class="team-notice-list" aria-label="Avisos publicados"></div>
-						<p id="team-notice-empty" class="team-notice-empty">Nenhum aviso publicado nesta sessão.</p>
-						<p id="team-notice-no-results" class="team-notice-empty" hidden>Nenhum aviso corresponde à busca.</p>
-					</section>
-					<dl class="dashboard-metrics communication-metrics">
-						<div><dt>Atendimentos no período</dt><dd id="communication-total"></dd></div>
-						<div><dt>Aguardando confirmação</dt><dd id="communication-pending"></dd></div>
-					</dl>
-					<form id="communication-filters" class="agenda-filters" aria-label="Filtrar lembretes">
-						<label class="agenda-search">Buscar aluno ou responsável
-							<input id="communication-search" type="search" placeholder="Nome do aluno ou responsável" autocomplete="off">
-						</label>
-						<label>Status
-							<select id="communication-status"><option value="">Todos</option><option value="pending">Aguardando confirmação</option><option value="confirmed">Confirmado</option></select>
-						</label>
-						<button class="agenda-reset" type="reset" title="Limpar filtros" aria-label="Limpar filtros"><i class="bi bi-arrow-counterclockwise" aria-hidden="true"></i></button>
-					</form>
-					<p id="communication-results" class="agenda-results" role="status" aria-live="polite"></p>
-					<div id="communication-table-scroll" class="agenda-table-scroll" role="region" aria-label="Lembretes de atendimentos" tabindex="0">
-						<table class="agenda-table communication-table">
-							<caption>Atendimentos e mensagens preparadas com contatos fictícios</caption>
-							<thead><tr><th scope="col">Data e horário</th><th scope="col">Aluno e responsável</th><th scope="col">Profissional</th><th scope="col">Status</th><th scope="col">Mensagem</th></tr></thead>
-							<tbody id="communication-list"></tbody>
-						</table>
-					</div>
-					<p id="communication-empty" hidden>Nenhum atendimento corresponde à busca e aos filtros.</p>
-				</section>
-				<section id="students-view" class="students-view" hidden aria-labelledby="students-title">
-					<div id="student-list-view">
-						<div class="students-heading">
-							<div><h2 id="students-title">Alunos cadastrados</h2><p>Registros demonstrativos; os dados não são persistidos.</p></div>
-							<button id="new-student-button" class="new-student-button" type="button"><i class="bi bi-person-plus" aria-hidden="true"></i> Novo aluno</button>
-						</div>
-						<div class="agenda-table-scroll" role="region" aria-label="Lista de alunos" tabindex="0">
-							<table class="agenda-table students-table">
-								<caption>Dados de exemplo</caption>
-								<thead><tr><th scope="col">Aluno</th><th scope="col">Responsável</th><th scope="col">Área</th><th scope="col">Atendimentos</th><th scope="col">Ações</th></tr></thead>
-								<tbody id="students-list"></tbody>
-							</table>
-						</div>
-					</div>
-					<section id="student-profile-view" class="student-profile-view" hidden aria-labelledby="student-profile-title">
-						<button id="student-list-back" class="student-list-back" type="button"><i class="bi bi-arrow-left" aria-hidden="true"></i> Voltar para alunos</button>
-						<img id="student-profile-photo" class="student-profile-photo" alt="" hidden>
-						<h2 id="student-profile-title"></h2>
-						<dl class="student-profile-details">
-							<div><dt>Data de nascimento</dt><dd id="profile-birth-date"></dd></div>
-							<div><dt>Responsável</dt><dd id="profile-guardian"></dd></div>
-							<div><dt>Contato</dt><dd id="profile-contact"></dd></div>
-							<div><dt>Área de acompanhamento</dt><dd id="profile-area"></dd></div>
-						</dl>
-						<h3>Histórico de atendimentos</h3>
-						<div class="agenda-table-scroll" role="region" aria-label="Histórico de atendimentos" tabindex="0">
-							<table class="agenda-table student-history-table">
-								<thead><tr><th scope="col">Data</th><th scope="col">Horário</th><th scope="col">Profissional</th><th scope="col">Área</th><th scope="col">Status</th></tr></thead>
-								<tbody id="student-history-list"></tbody>
-							</table>
-						</div>
-					</section>
-				</section>
-				<section id="reports-view" class="reports-view" hidden aria-labelledby="reports-title">
-					<header class="reports-header">
-						<div><h2 id="reports-title">Relatório de atendimentos</h2><p id="report-period-label"></p></div>
-						<div class="report-controls">
-							<label for="report-period">Período
-								<select id="report-period"><option value="7">Próximos 7 dias</option><option value="1">Hoje</option></select>
-							</label>
-							<button id="export-report" class="report-export-button" type="button"><i class="bi bi-download" aria-hidden="true"></i> Exportar CSV</button>
-						</div>
-					</header>
-					<p class="report-demo-note">Relatório baseado nos dados fictícios da demonstração.</p>
-					<dl class="dashboard-metrics report-metrics">
-						<div><dt>Atendimentos</dt><dd id="report-total"></dd></div>
-						<div><dt>Aguardando confirmação</dt><dd id="report-pending"></dd></div>
-						<div><dt>Confirmados</dt><dd id="report-confirmed"></dd></div>
-						<div><dt>Alunos atendidos</dt><dd id="report-students"></dd></div>
-					</dl>
-					<div class="report-distributions">
-						<section class="report-chart-section" aria-labelledby="report-area-title">
-							<h3 id="report-area-title">Atendimentos por área</h3>
-							<div id="report-area-chart" class="area-chart" role="list" aria-label="Atendimentos por área no período"></div>
-						</section>
-						<section class="report-chart-section" aria-labelledby="report-professional-title">
-							<h3 id="report-professional-title">Atendimentos por profissional</h3>
-							<div id="report-professional-chart" class="area-chart" role="list" aria-label="Atendimentos por profissional no período"></div>
-						</section>
-					</div>
-					<section class="report-detail-section" aria-labelledby="report-detail-title">
-						<h3 id="report-detail-title">Detalhamento por profissional e área</h3>
-						<div class="agenda-table-scroll" role="region" aria-label="Detalhamento do relatório" tabindex="0">
-							<table class="agenda-table report-table">
-								<caption>Atendimentos incluídos no período selecionado</caption>
-								<thead><tr><th scope="col">Profissional</th><th scope="col">Área</th><th scope="col">Total</th><th scope="col">Aguardando</th><th scope="col">Confirmados</th></tr></thead>
-								<tbody id="report-details"></tbody>
-							</table>
-						</div>
-					</section>
-				</section>
-				<section id="settings-view" class="settings-view" hidden aria-labelledby="settings-title">
-					<header class="settings-page-header">
-						<h2 id="settings-title">Preferências desta instalação</h2>
-						<p>Estas opções são salvas apenas neste navegador.</p>
-					</header>
-					<form id="settings-form" class="settings-form">
-						<label for="settings-start-page">Tela inicial
-							<select id="settings-start-page">
-								<option value="dashboard">Dashboard</option>
-								<option value="agenda">Agenda</option>
-								<option value="atendimentos">Atendimentos</option>
-								<option value="alunos">Alunos</option>
-								<option value="equipe">Equipe</option>
-								<option value="comunicacoes">Comunicações</option>
-								<option value="relatorios">Relatórios</option>
-							</select>
-						</label>
-						<fieldset class="settings-density">
-							<legend>Densidade das tabelas</legend>
-							<label><input type="radio" name="settings-density" value="comfortable"> Padrão</label>
-							<label><input type="radio" name="settings-density" value="compact"> Compacta</label>
-						</fieldset>
-						<fieldset class="settings-theme">
-							<legend>Tema</legend>
-							<label for="settings-dark-theme"><input id="settings-dark-theme" type="checkbox"> Ativar tema escuro</label>
-						</fieldset>
-						<p class="settings-note">Preferências locais; não são sincronizadas com outros dispositivos ou contas.</p>
-						<div class="settings-actions">
-							<button class="new-student-button" type="submit"><i class="bi bi-check-lg" aria-hidden="true"></i> Salvar preferências</button>
-							<button id="settings-reset" class="student-list-back" type="button">Restaurar padrão</button>
-						</div>
-					</form>
-					<p id="settings-feedback" class="settings-feedback" role="status" aria-live="polite"></p>
-				</section>
-				<dialog id="student-registration-dialog" class="student-dialog" aria-labelledby="student-registration-title">
-					<div class="student-dialog-heading">
-						<h2 id="student-registration-title">Cadastro de aluno</h2>
-						<form method="dialog"><button class="student-dialog-close" type="submit" aria-label="Fechar cadastro" title="Fechar cadastro"><i class="bi bi-x-lg" aria-hidden="true"></i></button></form>
-					</div>
-					<form id="student-registration-form" class="student-registration-form">
-						<label>Nome completo<input id="new-student-name" name="name" autocomplete="name" required></label>
-						<label>Data de nascimento<input id="new-student-birth-date" name="birthDate" type="date" required></label>
-						<label>Nome do responsável<input id="new-student-guardian" name="guardian" autocomplete="name" required></label>
-						<label>Telefone de contato<input id="new-student-contact" name="contact" type="tel" inputmode="tel" autocomplete="tel" placeholder="(11) 99999-9999" pattern="\(\d{2}\) \d{4,5}-\d{4}" required></label>
-						<label>Área de acompanhamento
-							<select id="new-student-area" name="area" required>
-								<option value="">Selecione uma área</option>
-								<option>Fonoaudiologia</option>
-								<option>Psicologia</option>
-								<option>Terapia Ocupacional</option>
-							</select>
-						</label>
-						<label>Foto (opcional)<input id="new-student-photo" name="photo" type="file" accept="image/png,image/jpeg,image/webp"></label>
-						<img id="student-photo-preview" class="student-photo-preview" alt="Prévia da foto selecionada" hidden>
-						<p class="student-form-note">Cadastro demonstrativo, sem gravação permanente.</p>
-						<button class="new-student-button" type="submit"><i class="bi bi-check-lg" aria-hidden="true"></i> Cadastrar aluno</button>
-					</form>
-				</dialog>
-			<dialog id="student-dialog" class="student-dialog" aria-labelledby="student-dialog-title">
-				<div class="student-dialog-heading">
-					<h2 id="student-dialog-title">Consulta do aluno</h2>
-					<form method="dialog"><button class="student-dialog-close" type="submit" aria-label="Fechar consulta" title="Fechar consulta"><i class="bi bi-x-lg" aria-hidden="true"></i></button></form>
-				</div>
-				<dl class="student-details">
-					<div><dt>Aluno</dt><dd id="student-detail-name"></dd></div>
-					<div><dt>Data e horário</dt><dd id="student-detail-datetime"></dd></div>
-					<div><dt>Profissional</dt><dd id="student-detail-professional"></dd></div>
-					<div><dt>Área</dt><dd id="student-detail-area"></dd></div>
-					<div><dt>Status</dt><dd id="student-detail-status"></dd></div>
-				</dl>
-				<form id="whatsapp-form" class="whatsapp-form">
-					<label for="student-whatsapp">WhatsApp do responsável</label>
-					<input id="student-whatsapp" type="tel" inputmode="tel" autocomplete="tel" placeholder="Código do país, DDD e número" required>
-					<button type="submit">Preparar confirmação</button>
-					<a id="whatsapp-link" class="whatsapp-link" target="_blank" rel="noopener noreferrer" hidden>Abrir WhatsApp com mensagem</a>
-				</form>
-			</dialog>
-			<section id="page-placeholder" class="page-placeholder" aria-live="polite" aria-atomic="true">
-				<h2 id="section-title">Visão geral</h2>
-				<p id="section-description">O dashboard será desenvolvido na próxima etapa.</p>
-			</section>
-		</main>
-	</div>
-	<script src="navegacao.js" defer></script>
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#dceef1" />
+    <title>Painel | Espaço Bianca Petenão</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="src/app.css" />
+    <link rel="stylesheet" href="src/features/agenda/calendar.css" />
+  </head>
+  <body class="app-body">
+    <div class="app-shell" id="app-shell" hidden>
+      <aside class="app-sidebar" id="app-sidebar" aria-label="Navegação principal">
+        <a class="sidebar-brand" href="#agenda"
+          ><span class="sidebar-brand-kicker">ESPAÇO</span><strong>Bianca Petenão</strong
+          ><span class="sidebar-brand-compact" aria-hidden="true">BP</span></a
+        >
+        <button
+          class="sidebar-toggle"
+          id="sidebar-toggle"
+          type="button"
+          aria-controls="app-sidebar"
+          aria-expanded="true"
+          aria-label="Recolher menu"
+        >
+          ‹
+        </button>
+        <nav class="sidebar-navigation" aria-label="Seções do sistema">
+          <p class="navigation-label">Menu</p>
+          <ul class="navigation-list" id="navigation-list"></ul>
+        </nav>
+        <button class="logout-link" id="logout" type="button">
+          <span class="navigation-icon" aria-hidden="true">↪</span
+          ><span class="navigation-link-label">Voltar ao início</span>
+        </button>
+      </aside>
+      <main class="app-main">
+        <header class="app-header">
+          <div class="app-heading">
+            <p class="eyebrow">Espaço Bianca Petenão</p>
+            <h1 id="page-title">Agenda</h1>
+          </div>
+          <div class="profile-summary">
+            <div><strong id="profile-name"></strong><span id="profile-role"></span></div>
+          </div>
+        </header>
+        <section class="demo-banner" aria-label="Demonstração">
+          <p>
+            <strong>Modo demonstração.</strong> Use dados fictícios. As alterações são descartadas
+            ao recarregar ou sair.
+          </p>
+          <label for="demo-role"
+            >Perfil da demonstração
+            <select id="demo-role">
+              <option value="admin">Admin</option>
+              <option value="user">Profissional</option>
+            </select>
+          </label>
+        </section>
+        <div id="page-content" tabindex="-1"></div>
+      </main>
+    </div>
+    <p id="boot-message" class="boot-message" role="status">Carregando demonstração…</p>
+    <noscript>Ative o JavaScript para acessar o sistema.</noscript>
+    <script type="module" src="src/app.js"></script>
+  </body>
 </html>
