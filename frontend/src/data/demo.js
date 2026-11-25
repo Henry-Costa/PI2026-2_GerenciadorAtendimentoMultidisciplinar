@@ -156,10 +156,9 @@ function assignmentDetails() {
   );
 }
 function filterAppointments(role, range) {
-  const from = Date.parse(instant(range.from + 'T00:00'));
-  const through = Date.parse(instant(addDays(range.to, 1) + 'T00:00'));
-  if (!Number.isFinite(from) || !Number.isFinite(through) || from >= through)
-    throw new Error('Confira o período selecionado.');
+  const from = range ? Date.parse(instant(range.from + 'T00:00')) : -Infinity;
+  const through = range ? Date.parse(instant(addDays(range.to, 1) + 'T00:00')) : Infinity;
+  if (!(from < through)) throw new Error('Confira o período selecionado.');
   return appointments
     .map((row) => ({ ...row, assignment: get(assignmentDetails(), row.assignment_id) }))
     .filter(
@@ -314,6 +313,10 @@ export function demo(role) {
     },
     listAppointments(range) {
       return copy(filterAppointments(role, range));
+    },
+    listHistory(kind, id) {
+      admin();
+      return copy(filterAppointments(role).filter((row) => row.assignment[kind] === id));
     },
     listAssignments() {
       admin();

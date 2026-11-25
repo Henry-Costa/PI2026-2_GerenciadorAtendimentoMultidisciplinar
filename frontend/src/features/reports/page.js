@@ -12,11 +12,14 @@ import {
   status,
 } from '../../shared/ui.js';
 import { csvCell } from '../../shared/validation.js';
-export async function mount(root, data, dashboard = false) {
+import { distribution } from '../agenda/summary.js';
+export async function mount(root, data) {
+  root.className = 'reports-view feature-page';
   const form = el('form', { className: 'agenda-filters' }),
     from = field(form, 'from', 'De', { type: 'date', value: localDate() }),
     to = field(form, 'to', 'Até', { type: 'date', value: addDays(localDate(), 6) }),
     list = el('div'),
+    charts = el('div', { className: 'report-distributions' }),
     metrics = el('dl', { className: 'dashboard-metrics' }),
     feedback = status('');
   form.append(el('button', { type: 'submit', className: 'secondary-button' }, 'Gerar relatório'));
@@ -64,10 +67,24 @@ export async function mount(root, data, dashboard = false) {
       metrics.replaceChildren(
         ...[
           ['Consultas no período', records.length],
+          ['Aguardando confirmação', records.filter((a) => a.status === 'scheduled').length],
+          ['Confirmados', records.filter((a) => a.status === 'confirmed').length],
+          [
+            'Alunos atendidos',
+            new Set(
+              records
+                .filter((a) => a.attendance.status === 'present')
+                .map((a) => a.assignment.student_id),
+            ).size,
+          ],
           ['Presenças', records.filter((a) => one(a.attendance).status === 'present').length],
           ['Ausências', records.filter((a) => one(a.attendance).status === 'absent').length],
           ['Valor previsto (sem canceladas)', money(total)],
         ].map(([label, v]) => el('div', {}, el('dt', {}, label), el('dd', {}, v))),
+      );
+      charts.replaceChildren(
+        distribution('Atendimentos por área', records, (a) => a.service.name),
+        distribution('Atendimentos por profissional', records, (a) => a.professional.full_name),
       );
       list.replaceChildren(
         records.length
@@ -101,6 +118,7 @@ export async function mount(root, data, dashboard = false) {
       records = [];
       list.replaceChildren();
       metrics.replaceChildren();
+      charts.replaceChildren();
       feedback.textContent = error.message;
     }
   }
@@ -115,13 +133,14 @@ export async function mount(root, data, dashboard = false) {
   });
   root.append(
     toolbar(
-      dashboard ? 'Visão geral' : 'Relatórios',
+      'Relatório de atendimentos',
       'Acompanhamento da agenda e valores previstos no período.',
-      dashboard ? null : exportButton,
+      exportButton,
     ),
     form,
     feedback,
     metrics,
+    charts,
     list,
   );
   await load();

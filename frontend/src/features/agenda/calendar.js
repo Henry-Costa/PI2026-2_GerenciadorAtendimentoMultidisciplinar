@@ -15,7 +15,6 @@ const fullDay = new Intl.DateTimeFormat('pt-BR', {
   month: 'long',
   timeZone: 'UTC',
 });
-const month = new Intl.DateTimeFormat('pt-BR', { month: 'long', year: 'numeric', timeZone: 'UTC' });
 const noon = (day) => new Date(day + 'T12:00Z');
 
 export function weekStart(day) {
@@ -56,7 +55,7 @@ export function calendar(day, records, navigate, actions, labels) {
     picker,
   );
   const week = el('div', {
-    className: 'week-strip',
+    className: 'agenda-day-strip',
     role: 'group',
     'aria-label': 'Dias da semana',
   });
@@ -67,14 +66,14 @@ export function calendar(day, records, navigate, actions, labels) {
         'button',
         {
           type: 'button',
-          className: 'week-day',
+          className: 'week-day agenda-day-option' + (day === key ? ' is-selected' : ''),
           'aria-pressed': String(day === key),
           'aria-label': dateLabel(key) + ', ' + total + ' consultas',
           onclick: () => navigate(key),
         },
-        el('span', {}, dayName.format(noon(key)).replace('.', '')),
-        el('strong', {}, String(Number(key.slice(-2)))),
-        el('span', { className: 'day-count' }, total || '—'),
+        el('span', { className: 'agenda-day-weekday' }, dayName.format(noon(key))),
+        el('strong', {}, dateLabel(key).slice(0, 5)),
+        el('span', { className: 'agenda-day-count' }, total),
       ),
     );
   }
@@ -139,7 +138,12 @@ export function calendar(day, records, navigate, actions, labels) {
   return el(
     'div',
     { className: 'week-calendar' },
-    el('div', { className: 'week-heading' }, el('h3', {}, month.format(noon(day))), nav),
+    el(
+      'div',
+      { className: 'week-heading' },
+      el('p', { className: 'agenda-period' }, dateLabel(start) + ' a ' + dateLabel(days.at(-1))),
+      nav,
+    ),
     week,
     agenda,
   );

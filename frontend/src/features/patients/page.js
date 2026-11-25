@@ -15,7 +15,9 @@ import {
   status,
 } from '../../shared/ui.js';
 import { validCPF, normalizeSearch } from '../../shared/validation.js';
+import { history } from '../agenda/summary.js';
 export async function mount(root, data) {
+  root.className = 'students-view';
   let records = await data.listPatients(),
     query = '';
   const list = el('div');
@@ -31,7 +33,12 @@ export async function mount(root, data) {
               p.full_name,
               dateLabel(p.birth_date),
               dateLabel(p.care_started_at),
-              button('Consultar / editar', () => edit(p.id)),
+              el(
+                'div',
+                { className: 'row-actions' },
+                button('Ver perfil', () => showProfile(p), 'student-consult-button'),
+                button('Editar', () => edit(p.id)),
+              ),
             ]),
           )
         : status('Nenhum paciente encontrado.'),
@@ -40,6 +47,30 @@ export async function mount(root, data) {
   async function reload() {
     records = await data.listPatients();
     render();
+  }
+  function showProfile(patient) {
+    const profile = el('section', { className: 'student-profile-view' });
+    if (patient.photo)
+      profile.append(
+        el('img', { src: patient.photo, alt: '', className: 'student-profile-photo' }),
+      );
+    const fields = [
+      ['Data de nascimento', dateLabel(patient.birth_date)],
+      ['Responsável financeiro', patient.responsible?.full_name],
+      ['Contato', patient.contact?.phone || patient.responsible?.phone],
+    ];
+    profile.append(
+      el(
+        'dl',
+        { className: 'student-details' },
+        fields.map(([label, content]) =>
+          el('div', {}, el('dt', {}, label), el('dd', {}, content || '—')),
+        ),
+      ),
+      el('h3', {}, 'Histórico de atendimentos'),
+      history(data, 'student_id', patient.id),
+    );
+    dialog(patient.full_name, profile);
   }
   async function edit(id) {
     const loading = dialog(
@@ -61,6 +92,11 @@ export async function mount(root, data) {
         assignments = p.assignments || [];
       const form = el('form', { className: 'feature-form' }),
         personal = group(form, 'Dados pessoais');
+      const photo = field(personal, 'photo', 'Foto (opcional)', {
+        type: 'file',
+        required: false,
+        accept: 'image/png,image/jpeg,image/webp',
+      });
       field(personal, 'full_name', 'Nome completo', {
         value: p.full_name,
         minLength: 3,
@@ -247,8 +283,25 @@ export async function mount(root, data) {
       );
       formSubmit(
         form,
-        () =>
+        async () => {
+          const file = photo.files[0];
+          if (
+            file &&
+            (!['image/png', 'image/jpeg', 'image/webp'].includes(file.type) ||
+              file.size > 2 * 1024 * 1024)
+          )
+            throw new Error('Escolha uma foto PNG, JPEG ou WebP de até 2 MB.');
+          let photoData = patient.photo;
+          if (file) {
+            photoData = await new Promise((resolve, reject) => {
+              const reader = new FileReader();
+              reader.onload = () => resolve(reader.result);
+              reader.onerror = () => reject(new Error('Não foi possível ler a foto.'));
+              reader.readAsDataURL(file);
+            });
+          }
           data.savePatient(id, {
+            photo: photoData,
             full_name: value(form, 'full_name'),
             birth_date: value(form, 'birth_date'),
             care_started_at: value(form, 'care_started_at'),
@@ -288,7 +341,8 @@ export async function mount(root, data) {
               reminder_recipient: recipient.value,
               is_active: active.value === 'true',
             },
-          }),
+          });
+        },
         async () => {
           loading.close();
           await reload();
@@ -312,7 +366,7 @@ export async function mount(root, data) {
   }
   root.append(
     toolbar(
-      'Pacientes',
+      'Alunos cadastrados',
       'Cadastros, contatos, responsáveis e vínculos de atendimento.',
       button('Novo paciente', () => edit(), 'new-student-button'),
     ),

@@ -38,10 +38,7 @@
   display: none;
 }
 .week-calendar {
-  border: 1px solid var(--line);
-  border-radius: 14px;
-  background: var(--paper);
-  box-shadow: 0 5px 20px #18455108;
+  min-width: 0;
 }
 .week-heading,
 .day-heading {
@@ -52,17 +49,12 @@
   gap: 10px;
 }
 .week-heading {
-  padding: 20px 22px 12px;
+  padding-top: 8px;
 }
-.week-heading h3,
 .day-heading h3 {
   margin: 0;
   color: var(--teal-deep);
 }
-.week-heading h3 {
-  font-size: clamp(18px, 2vw, 25px);
-}
-.week-heading h3::first-letter,
 .day-heading h3::first-letter {
   text-transform: uppercase;
 }
@@ -85,51 +77,10 @@
   background: white;
   min-width: 0;
 }
-.week-strip {
-  display: grid;
-  grid-template-columns: repeat(7, minmax(0, 1fr));
-  gap: 6px;
-  padding: 0 22px 18px;
-}
-.week-day {
-  display: grid;
-  justify-items: center;
-  gap: 4px;
-  padding: 10px 1px;
-  border: 1px solid var(--line);
-  border-radius: 9px;
-  background: #f6faf9;
-  color: var(--teal-deep);
-}
-.week-day > span:first-child {
-  text-transform: uppercase;
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-}
-.week-day strong {
-  font-size: 23px;
-}
-.day-count {
-  min-width: 19px;
-  padding: 1px 4px;
-  background: #e2eeee;
-  border-radius: 20px;
-  font-size: 11px;
-}
-.week-day:hover {
-  background: #e4f1ef;
-}
-.week-day[aria-pressed='true'] {
-  background: var(--teal-deep);
-  border-color: var(--teal-deep);
-  color: white;
-}
-.week-day[aria-pressed='true'] .day-count {
-  background: #ffffff27;
-}
 .daily-agenda {
-  border-top: 1px solid var(--line);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background: var(--paper);
 }
 .day-heading {
   padding: 15px 22px;
@@ -186,6 +137,21 @@
   padding: 5px 8px;
   font-size: 12px;
 }
+.compact-density .calendar-event {
+  padding-block: 8px;
+}
+.dark-theme .agenda-views,
+.dark-theme .day-heading,
+.dark-theme .schedule-summary {
+  background: #0f172a;
+}
+.dark-theme .agenda-views [aria-pressed='true'],
+.dark-theme .week-tools input {
+  background: var(--paper);
+}
+.dark-theme .schedule-summary {
+  color: var(--ink);
+}
 .calendar-empty {
   padding: 12px 22px 20px;
   color: var(--ink-soft);
@@ -207,17 +173,6 @@
   }
 }
 @media (max-width: 700px) {
-  .week-strip {
-    gap: 3px;
-    padding: 0 8px 12px;
-  }
-  .week-day {
-    border-radius: 5px;
-  }
-  .week-day strong {
-    font-size: 18px;
-  }
-  .week-heading,
   .day-heading,
   .calendar-event {
     padding: 12px;
@@ -233,8 +188,5 @@
   .calendar-filters {
     display: grid;
     grid-template-columns: minmax(0, 1fr);
-  }
-  .week-day > span:first-child {
-    font-size: 10px;
   }
 }

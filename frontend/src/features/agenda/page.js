@@ -15,6 +15,7 @@ import {
 import { normalizeSearch } from '../../shared/validation.js';
 import { calendar, weekStart } from './calendar.js';
 import { appointmentForm } from './form.js';
+import { filterOptions } from './summary.js';
 
 const labels = {
   scheduled: 'Agendado',
@@ -44,6 +45,22 @@ export async function mount(root, data) {
       })),
     ],
   });
+  const professional = admin
+    ? field(filters, 'professional', 'Profissional', {
+        required: false,
+        options: filterOptions(data.listProfessionals().map((row) => row.full_name)),
+      })
+    : null;
+  const area = field(filters, 'area', 'Área', {
+    required: false,
+    options: admin
+      ? filterOptions(
+          data.listServices().map((row) => row.name),
+          'Todas',
+        )
+      : [],
+  });
+  area.parentElement.hidden = !admin;
   const submit = el('button', { type: 'submit', className: 'secondary-button' }, 'Atualizar');
   const modeBar = el('div', {
     className: 'agenda-views',
@@ -101,6 +118,8 @@ export async function mount(root, data) {
     load();
   });
   state.addEventListener('change', render);
+  professional?.addEventListener('change', render);
+  area.addEventListener('change', render);
   function edit(a) {
     appointmentForm(data, mode === 'calendar' ? day : from.value, a, (savedDay) => {
       day = savedDay;
@@ -141,6 +160,8 @@ export async function mount(root, data) {
     const rows = records.filter(
       (a) =>
         (!state.value || a.status === state.value) &&
+        (!professional?.value || a.assignment.professional.full_name === professional.value) &&
+        (!area.value || a.assignment.service.name === area.value) &&
         normalizeSearch(
           one(a.assignment).student?.full_name +
             ' ' +
@@ -221,7 +242,7 @@ export async function mount(root, data) {
   }
   root.append(
     toolbar(
-      admin ? 'Agenda do espaço' : 'Minha agenda',
+      admin ? 'Agenda semanal' : 'Minha agenda',
       admin
         ? 'Gerencie horários e acompanhe a presença dos pacientes.'
         : 'Check-in a partir de 30 minutos antes; ausência após o fim. Registros disponíveis até 24 horas após a sessão.',

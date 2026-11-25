@@ -13,6 +13,8 @@ Acesse http://127.0.0.1:5500. A interface usa módulos nativos do navegador e di
 - **Admin** pode criar e editar funcionários, tipos de atendimento, pacientes e consultas. Também pode ver relatórios e exportar CSV.
 - **Profissional** vê apenas a própria agenda e pode registrar check-in ou ausência conforme os horários da demonstração. Cancelamento e edição de consultas ficam com o admin.
 - O seletor no painel troca o perfil na mesma página, preservando os dados de teste em memória para comparar os fluxos. Recarregar ou sair volta aos exemplos iniciais.
+- Em **Configurações**, salve tema claro ou escuro, densidade das tabelas e, para o admin, a tela inicial. As preferências ficam no navegador.
+- O **Dashboard** reúne os indicadores, o gráfico por área e a lista filtrável de atendimentos. **Comunicações** apresenta uma prévia dos lembretes e confirmações.
 - No cadastro de paciente, escolha o tipo de atendimento para carregar os profissionais compatíveis. O preço do tipo sugere o valor do vínculo, que sugere o valor da consulta.
 - Na Agenda, selecione um dia no calendário semanal ou use a lista por período. O admin cria consultas únicas ou semanais (2 a 52 ocorrências, incluindo a primeira).
 - Uma sessão dupla ocupa dois períodos consecutivos do atendimento e sugere o dobro do valor do vínculo. O admin pode ajustar o valor por consulta. O término é calculado automaticamente.

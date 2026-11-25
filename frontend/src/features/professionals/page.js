@@ -13,7 +13,9 @@ import {
   status,
 } from '../../shared/ui.js';
 import { normalizeSearch } from '../../shared/validation.js';
+import { history } from '../agenda/summary.js';
 export async function mount(root, data) {
+  root.className = 'team-view';
   let records = await data.listProfessionals(),
     query = '';
   const list = el('div');
@@ -30,7 +32,27 @@ export async function mount(root, data) {
               p.specialty,
               p.role === 'admin' ? 'Admin' : 'Usuário comum',
               p.is_active ? 'Ativo' : 'Inativo',
-              button('Consultar / editar', () => edit(p.id)),
+              el(
+                'div',
+                { className: 'row-actions' },
+                button(
+                  'Ver perfil',
+                  () =>
+                    dialog(
+                      p.full_name,
+                      el(
+                        'section',
+                        { className: 'team-profile-view' },
+                        el('p', { className: 'team-profile-area' }, p.specialty),
+                        el('p', {}, [p.email, p.phone].filter(Boolean).join(' · ')),
+                        el('h3', {}, 'Atendimentos'),
+                        history(data, 'professional_id', p.id),
+                      ),
+                    ),
+                  'student-consult-button',
+                ),
+                button('Editar', () => edit(p.id)),
+              ),
             ]),
           )
         : status('Nenhum profissional encontrado.'),
@@ -165,7 +187,7 @@ export async function mount(root, data) {
   }
   root.append(
     toolbar(
-      'Equipe',
+      'Profissionais',
       'Profissionais responsáveis pelos atendimentos e seus papéis no sistema.',
       button('Novo profissional', () => edit(), 'new-student-button'),
     ),
